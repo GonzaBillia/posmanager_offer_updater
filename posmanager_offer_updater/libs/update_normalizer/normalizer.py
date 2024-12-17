@@ -8,26 +8,50 @@ def procesar_archivos(file_path1, file_path2):
     # Intentar leer los archivos
     try:
         # Leer el archivo df1 (CSV delimitado por tabulaciones)
-        df1 = pd.read_csv(file_path1, sep='\t', encoding='latin1', on_bad_lines='skip')
-
-        # Leer el archivo df2 (TXT delimitado por comas)
-        df2 = pd.read_csv(file_path2, sep=',', encoding='latin1', on_bad_lines='skip')
-
+        df1 = pd.read_csv(file_path1, sep=';', encoding='utf-8-sig', on_bad_lines='skip')
+    except pd.errors.ParserError as e:
+        print(f"Error de análisis al leer el archivo {file_path1}: {e}")
+        exit()
+    except FileNotFoundError as e:
+        print(f"Archivo no encontrado: {file_path1}")
+        exit()
     except Exception as e:
-        print(f"Hubo un error al leer los archivos: {e}")
+        print(f"Hubo un error al leer el archivo {file_path1}: {e}")
         exit()
 
-    # INPUT
-
+    try:
+        # Leer el archivo df2 (TXT delimitado por tabulaciones)
+        df2 = pd.read_csv(file_path2, sep='\t', encoding='latin1', on_bad_lines='skip')
+    except pd.errors.ParserError as e:
+        print(f"Error de análisis al leer el archivo {file_path2}: {e}")
+        exit()
+    except FileNotFoundError as e:
+        print(f"Archivo no encontrado: {file_path2}")
+        exit()
+    except Exception as e:
+        print(f"Hubo un error al leer el archivo {file_path2}: {e}")
+        exit()
 
     # NORMALIZACION Y JOIN
-
-    # Reparar posibles problemas de codificación en 'Nom Reducido'
-    df1['Nom Reducido'] = df1['Nom Reducido'].str.encode('latin1').str.decode('utf-8')
 
     # Limpiar los nombres de las columnas eliminando espacios en blanco
     df1.columns = df1.columns.str.strip()
     df2.columns = df2.columns.str.strip()
+
+    # Verificar que las columnas necesarias existen en ambos DataFrames
+    required_columns_df1 = ['IDProducto']
+    required_columns_df2 = ['CodigoERP']
+
+    missing_columns_df1 = [col for col in required_columns_df1 if col not in df1.columns]
+    missing_columns_df2 = [col for col in required_columns_df2 if col not in df2.columns]
+
+    if missing_columns_df1:
+        print(f"Error: Las siguientes columnas no se encuentran en df1: {', '.join(missing_columns_df1)}")
+        exit()
+
+    if missing_columns_df2:
+        print(f"Error: Las siguientes columnas no se encuentran en df2: {', '.join(missing_columns_df2)}")
+        exit()
 
     # Verificar que las columnas necesarias existen en ambos DataFrames
     if 'IDProducto' not in df1.columns or 'CodigoERP' not in df2.columns:

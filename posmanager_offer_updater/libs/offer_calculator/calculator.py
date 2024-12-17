@@ -86,8 +86,11 @@ def calcular_ofertas(output_file, archivo_propuesta):
         )
 
         if ruta_guardado:
-            items_df.to_csv(ruta_guardado, index=False, sep='\t', encoding='utf-16', float_format="%.2f")  # Especificar formato decimal
+            items_df.to_csv(ruta_guardado, index=False, header=False, sep='\t', encoding='utf-16', float_format="%.2f")  # Especificar formato decimal
+            return True
         else:
             messagebox.showwarning("Cancelado", "La exportación fue cancelada.")
+            return False
     except Exception as e:
         messagebox.showerror("Error", f"Ocurrió un error: {e}")
+        return False
