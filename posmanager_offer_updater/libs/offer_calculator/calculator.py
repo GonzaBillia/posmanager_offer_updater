@@ -26,8 +26,11 @@ def calcular_ofertas(output_file, archivo_propuesta):
         items_df = items_df.applymap(normalizar_texto)
         propuesta_df = propuesta_df.applymap(normalizar_texto)
 
+        # Limpiar y convertir la columna de precios a float
+        items_df[items_df.columns[8]] = items_df[items_df.columns[8]].replace({',': '.'}, regex=True).astype(float)
+
         # Verificar existencia de columnas
-        if "IDProducto" not in items_df.columns or propuesta_df.columns[0] != "codigo_ERP":
+        if "IDProducto" not in items_df.columns or propuesta_df.columns[0] != "Id Quantio":
             messagebox.showerror("Error", "¡Faltan las columnas IDProducto o codigo_ERP!")
             return
 
@@ -36,15 +39,28 @@ def calcular_ofertas(output_file, archivo_propuesta):
             messagebox.showerror("Error", "¡La columna Precio_de_Oferta_Etiquetas no existe en el archivo Items!")
             return
 
-        # Actualizar la columna en la posición 23 con el cálculo correspondiente
         def calcular_precio_final(id_producto, precio_final):
-            if id_producto in propuesta_df.iloc[:, 0].values:
-                descuento = propuesta_df.loc[propuesta_df.iloc[:, 0] == id_producto, propuesta_df.columns[1]].values[0]
-                if descuento <= 1:  # Descuento como porcentaje
-                    return precio_final * (1 - descuento), True
-                else:  # Precio fijo
-                    return descuento, True
-            return "", False
+            try:
+                # Asegurarse de que precio_final sea un número flotante
+                precio_final = float(precio_final)  # Convertir precio_final a float
+
+                # Buscar el descuento correspondiente en el archivo de propuesta
+                if id_producto in propuesta_df.iloc[:, 0].values:
+                    descuento_str = propuesta_df.loc[propuesta_df.iloc[:, 0] == id_producto, propuesta_df.columns[1]].values[0]
+                    
+                    # Convertir el descuento a float, manejando posibles errores
+                    descuento = float(descuento_str)
+                    
+                    # Verificar si el descuento es un porcentaje o un precio fijo
+                    if descuento <= 1:  # Descuento como porcentaje
+                        return precio_final * (1 - descuento), True
+                    else:  # Precio fijo
+                        return descuento, True
+                return "", False  # Si no se encuentra el producto, devolver vacío
+            except ValueError:
+                # Manejar si no se puede convertir el descuento o el precio a un número flotante
+                print(f"Error al convertir el descuento de {id_producto} o el precio a flotante.")
+                return "", False
 
         # Calcular precios y agregar indicador de descuento
         descuentos = items_df.apply(
@@ -54,7 +70,7 @@ def calcular_ofertas(output_file, archivo_propuesta):
 
         # Verificar si la columna de índice 35 existe, y agregarla si no tiene encabezado
         if len(items_df.columns) <= 35:
-            items_df.insert(35, 'Descuento', "")  # Agregar una nueva columna llamada 'Descuento' en el índice 35
+            items_df.insert(35, 'Es Oferta', "")  # Agregar una nueva columna llamada 'Es Oferta' en el índice 35
 
         items_df.iloc[:, 35] = ["S" if descuento else "N" for _, descuento in descuentos]
 
@@ -71,7 +87,6 @@ def calcular_ofertas(output_file, archivo_propuesta):
 
         if ruta_guardado:
             items_df.to_csv(ruta_guardado, index=False, sep='\t', encoding='utf-16', float_format="%.2f")  # Especificar formato decimal
-            messagebox.showinfo("Éxito", "¡Archivo guardado exitosamente!")
         else:
             messagebox.showwarning("Cancelado", "La exportación fue cancelada.")
     except Exception as e:

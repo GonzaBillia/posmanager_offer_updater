@@ -29,7 +29,7 @@ def procesar():
         return
 
     try:
-        output_file = procesar_archivos(file_path1, file_path2, file_propuesta)  # Pasar el nuevo parámetro al procesador
+        output_file = procesar_archivos(file_path1, file_path2)  # Pasar el nuevo parámetro al procesador
         items_file = calcular_ofertas(output_file, file_propuesta)
         messagebox.showinfo("Éxito", f"El archivo de resultados ha sido guardado exitosamente")
     except ValueError as e:
