@@ -1,5 +1,4 @@
 import pandas as pd
-from tkinter import Tk
 import os
 from datetime import datetime
 
@@ -53,10 +52,6 @@ def procesar_archivos(file_path1, file_path2):
         print(f"Error: Las siguientes columnas no se encuentran en df2: {', '.join(missing_columns_df2)}")
         exit()
 
-    # Verificar que las columnas necesarias existen en ambos DataFrames
-    if 'IDProducto' not in df1.columns or 'CodigoERP' not in df2.columns:
-        print("Error: Las columnas 'IDProducto' o 'CodigoERP' no se encuentran en ambos archivos.")
-        exit()
 
     # Renombrar la columna 'IDProducto' de df1 a 'CodigoERP'
     df2 = df2.rename(columns={'CodigoERP': 'IDProducto'})
@@ -146,9 +141,9 @@ def procesar_archivos(file_path1, file_path2):
 
     # Crear el nombre de archivo con la fecha de hoy
     fecha_hoy = datetime.today().strftime('%Y-%m-%d')
-    output_file = os.path.join(output_dir, f"query-{fecha_hoy}.csv")
+    output_file = os.path.join(output_dir, f"Items-{fecha_hoy}.csv")
 
     # Guardar el resultado
-    df1.to_csv(output_file, index=False)
+    result.to_csv(output_file, index=False)
 
     return output_file
