@@ -74,9 +74,12 @@ def calcular_ofertas(output_file, archivo_propuesta):
 
         items_df.iloc[:, 35] = ["S" if descuento else "N" for _, descuento in descuentos]
 
-        # Convertir las columnas 8, 23 y 24 al formato adecuado
-        items_df.iloc[:, [8, 22, 23]] = items_df.iloc[:, [8, 22, 23]].apply(pd.to_numeric, errors='coerce')
-        items_df.iloc[:, [8, 22, 23]] = items_df.iloc[:, [8, 22, 23]].fillna(0)  # Opcional: Manejo de NaN
+        # Reemplazar comas por puntos en las columnas y convertirlas a numérico
+        items_df.iloc[:, [8, 22, 23, 24]] = items_df.iloc[:, [8, 22, 23, 24]].replace(",", ".", regex=True)
+        items_df.iloc[:, [8, 22, 23, 24]] = items_df.iloc[:, [8, 22, 23, 24]].apply(pd.to_numeric, errors='coerce')
+
+        # Rellenar valores NaN con 0 (opcional)
+        items_df.iloc[:, [8, 22, 23, 24]] = items_df.iloc[:, [8, 22, 23, 24]].fillna(0)
 
         # Exportar archivo actualizado como TXT Unicode
         ruta_guardado = filedialog.asksaveasfilename(
