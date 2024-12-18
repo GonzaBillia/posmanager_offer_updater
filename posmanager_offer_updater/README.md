@@ -1,6 +1,7 @@
-
-
 # posmanager-offer-updater
+
+## Version
+1.1.2
 
 El proyecto **posmanager-offer-updater** es una herramienta que permite procesar y actualizar ofertas de productos de una manera automatizada, normalizando los datos y calculando precios de ofertas. La herramienta permite leer archivos de entrada (en formatos CSV y TXT), normalizar los datos y realizar uniones entre ellos para obtener la información final necesaria para las ofertas. Además, genera un archivo de salida con los datos procesados y sin cabeceras.
 
@@ -16,9 +17,12 @@ posmanager-offer-updater
 │   ├── offer_calculator
 │   │   ├── __init__.py            # Inicializa el módulo offer_calculator
 │   │   └── calculator.py          # Contiene la lógica para calcular precios de oferta
-│   └── update_normalizer
-│       ├── __init__.py            # Inicializa el módulo update_normalizer
-│       └── normalizer.py          # Contiene la lógica para normalizar y limpiar los datos
+│   ├── update_normalizer
+│   │   ├── __init__.py            # Inicializa el módulo update_normalizer
+│   │   └── normalizer.py          # Contiene la lógica para normalizar y limpiar los datos
+│   └── codebar_selector
+│       ├── __init__.py            # Inicializa el módulo codebar_selector
+│       └── selector.py            # Procesa códigos de barras para mapear IDProducto a código interno
 ├── main.py                        # Archivo principal que ejecuta el procesamiento de ofertas
 ├── README.md                      # Este archivo
 ├── requirements.txt               # Lista de dependencias del proyecto
@@ -27,10 +31,11 @@ posmanager-offer-updater
 
 ## Descripción
 
-El proyecto tiene dos módulos principales:
+El proyecto tiene tres módulos principales:
 
 1. **offer_calculator**: Se encarga de calcular el precio final de las ofertas, aplicando cualquier regla o fórmula de cálculo necesario.
 2. **update_normalizer**: Este módulo se encarga de normalizar los datos de los archivos de entrada, limpiando las columnas y asegurándose de que el formato de los datos sea consistente antes de realizar cualquier operación.
+3. **codebar_selector**: Permite procesar un archivo de códigos de barras y mapear los IDProducto del archivo de salida generado por `offer_calculator` con los códigos internos utilizados por POSManager.
 
 El archivo `main.py` es el punto de entrada de la aplicación, donde se leen los archivos de datos (en formatos CSV y TXT), se normalizan y procesan, y finalmente se guarda el archivo de salida con los datos actualizados y sin las cabeceras.
 
@@ -98,11 +103,11 @@ Ejecuta el archivo `main.py` para procesar los archivos de entrada y generar el 
 python main.py
 ```
 
-El script leerá los archivos de entrada, realizará las operaciones necesarias (como normalización y cálculo de precios) y generará un archivo de salida con los datos procesados. El archivo de salida se guardará en la carpeta `processed-files` con un nombre como `query-{fecha de hoy}.txt`.
+El script leerá los archivos de entrada, realizará las operaciones necesarias (como normalización, cálculo de precios y selección de códigos de barras) y generará un archivo de salida con los datos procesados. El archivo de salida se guardará en la carpeta `processed-files` con un nombre como `query-{fecha de hoy}.txt`.
 
 ### 3. Personalizar los archivos de entrada
 
-Si necesitas personalizar los archivos de entrada, puedes ajustar las configuraciones dentro de los módulos `offer_calculator/calculator.py` y `update_normalizer/normalizer.py`, que contienen la lógica de procesamiento de los datos.
+Si necesitas personalizar los archivos de entrada, puedes ajustar las configuraciones dentro de los módulos `offer_calculator/calculator.py`, `update_normalizer/normalizer.py`, y `codebar_selector/selector.py`, que contienen la lógica de procesamiento de los datos.
 
 ## Requerimientos
 
