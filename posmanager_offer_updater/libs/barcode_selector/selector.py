@@ -1,8 +1,7 @@
 import pandas as pd
 import os
 from datetime import datetime
-from tkinter import filedialog, messagebox
-import unicodedata
+from tkinter import messagebox
 
 def seleccionar_barcodes(output_file, barcode_query):
     try:
