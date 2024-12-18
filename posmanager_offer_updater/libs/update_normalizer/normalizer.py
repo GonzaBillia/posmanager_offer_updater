@@ -71,20 +71,6 @@ def procesar_archivos(file_path1, file_path2):
         'IDRubro', 'idMarca', 'Fecha Inicio', 'Fecha Fin'
     ]
 
-    columnas_a_mostrar_final = [
-        'codigoInterno', 'Nom Reducido', 'idItem', 'idTipoIVA', 'idCategoria',
-        'IDSubRubro', 'Codigo_de_Envase_asociado', 'Porc_de_Impuesto_Interno',
-        'precio_final', 'FechaUltimoPrecio', 'descrip reducida',
-        'Eliminacion_de_item', 'Tipo de Unidad', 'Unidad', 'Dias_de_Vencimiento',
-        'Tamanio de Letra', 'FechaUltimoPrecio', 'Codigo_Adicional',
-        'Permite_Modif_Descripcion', 'Precio adicional de venta con IVA',
-        'Codigo de Plantilla de Etiqueta', 'Codigo de IVA Diferencial',
-        'UltimoPrecio', 'Precio_de_Oferta_Etiquetas', 'IDProducto',
-        'Codigo_de_envase_asociado_ERP', 'Monto_de_Impuesto_Interno', 'idTipoIVA',
-        'Aplica_Percepcion_5329', 'Costo _el_articulo', 'idProveedor',
-        'IDRubro', 'idMarca', 'Fecha Inicio', 'Fecha Fin'
-    ]
-
     # Realizar el "merge" entre las dos tablas usando 'CodigoERP', con un 'left join' para incluir filas de df1 que no están en df2
     merged_df = pd.merge(df1, df2[['IDProducto', 'IdItem']], on='IDProducto', how='left')
 
@@ -126,9 +112,6 @@ def procesar_archivos(file_path1, file_path2):
     result = result.drop(columns=['codigoInterno'])
     # Renombrar 'IdItem' como 'codigoInterno'
     result.rename(columns={'IdItem': 'codigoInterno'}, inplace=True)
-
-    # Reorganizar las columnas
-    result = result[columnas_a_mostrar_final]
 
     # OUTPUT
 
