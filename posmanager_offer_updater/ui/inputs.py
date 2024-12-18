@@ -1,27 +1,37 @@
 import tkinter as tk
-from tkinter import filedialog, ttk
+from tkinter import ttk
+from tkinter import filedialog
+from ui.logs import actualizar_log
 
-def seleccionar_archivo_entrada1(entry_archivo1):
+def seleccionar_archivo_entrada1(entry_archivo1, log_area):
     file_path = filedialog.askopenfilename(title="Seleccionar la consulta de la Base de Datos", filetypes=[("Archivos CSV", "*.csv"), ("Archivos Excel", "*.xlsx;*.xls")])
-    entry_archivo1.delete(0, tk.END)
-    entry_archivo1.insert(0, file_path)
+    if file_path:
+        entry_archivo1.delete(0, tk.END)
+        entry_archivo1.insert(0, file_path)
+        actualizar_log(f"Archivo de base de datos seleccionado: {file_path}", log_area)
 
-def seleccionar_archivo_entrada2(entry_archivo2):
+def seleccionar_archivo_entrada2(entry_archivo2, log_area):
     file_path = filedialog.askopenfilename(title="Seleccionar la lista de Items de POSManager", filetypes=[("Archivos TXT", "*.txt"), ("Archivos CSV", "*.csv"), ("Archivos Excel", "*.xlsx;*.xls")])
-    entry_archivo2.delete(0, tk.END)
-    entry_archivo2.insert(0, file_path)
+    if file_path:
+        entry_archivo2.delete(0, tk.END)
+        entry_archivo2.insert(0, file_path)
+        actualizar_log(f"Lista de Items de POSManager seleccionada: {file_path}", log_area)
 
-def seleccionar_archivo_propuesta(entry_propuesta):
+def seleccionar_archivo_propuesta(entry_propuesta, log_area):
     file_path = filedialog.askopenfilename(title="Seleccionar archivo de Propuesta", filetypes=[("Archivos Excel", "*.xlsx;*.xls")])
-    entry_propuesta.delete(0, tk.END)
-    entry_propuesta.insert(0, file_path)
+    if file_path:
+        entry_propuesta.delete(0, tk.END)
+        entry_propuesta.insert(0, file_path)
+        actualizar_log(f"Archivo de Propuesta seleccionado: {file_path}", log_area)
 
-def seleccionar_archivo_codebars(entry_codebars):
+def seleccionar_archivo_codebars(entry_codebars, log_area):
     file_path = filedialog.askopenfilename(title="Seleccionar archivo de código de barras", filetypes=[("Archivos CSV", "*.csv"),("Archivos Excel", "*.xlsx;*.xls")])
-    entry_codebars.delete(0, tk.END)
-    entry_codebars.insert(0, file_path)
+    if file_path:
+        entry_codebars.delete(0, tk.END)
+        entry_codebars.insert(0, file_path)
+        actualizar_log(f"Archivo de código de barras seleccionado: {file_path}", log_area)
 
-def crear_inputs(root):
+def crear_inputs(root, log_area):
     # Inputs y botones para los archivos
     label_archivo1 = ttk.Label(root, text="Seleccionar la consulta de la Base de Datos (CSV delimitado por punto y coma):")
     label_archivo1.grid(row=0, column=0, padx=10, pady=10)
@@ -29,7 +39,7 @@ def crear_inputs(root):
     entry_archivo1 = ttk.Entry(root, width=50)
     entry_archivo1.grid(row=0, column=1, padx=10, pady=10)
 
-    button_archivo1 = ttk.Button(root, text="Buscar", command=lambda: seleccionar_archivo_entrada1(entry_archivo1))
+    button_archivo1 = ttk.Button(root, text="Buscar", command=lambda: seleccionar_archivo_entrada1(entry_archivo1, log_area))
     button_archivo1.grid(row=0, column=2, padx=10, pady=10)
 
     label_archivo2 = ttk.Label(root, text="Seleccionar la lista de Items de POSManager (TXT delimitado por comas):")
@@ -38,7 +48,7 @@ def crear_inputs(root):
     entry_archivo2 = ttk.Entry(root, width=50)
     entry_archivo2.grid(row=1, column=1, padx=10, pady=10)
 
-    button_archivo2 = ttk.Button(root, text="Buscar", command=lambda: seleccionar_archivo_entrada2(entry_archivo2))
+    button_archivo2 = ttk.Button(root, text="Buscar", command=lambda: seleccionar_archivo_entrada2(entry_archivo2, log_area))
     button_archivo2.grid(row=1, column=2, padx=10, pady=10)
 
     label_propuesta = ttk.Label(root, text="Seleccionar archivo de Propuesta (Excel):")
@@ -47,7 +57,7 @@ def crear_inputs(root):
     entry_propuesta = ttk.Entry(root, width=50)
     entry_propuesta.grid(row=2, column=1, padx=10, pady=10)
 
-    button_propuesta = ttk.Button(root, text="Buscar", command=lambda: seleccionar_archivo_propuesta(entry_propuesta))
+    button_propuesta = ttk.Button(root, text="Buscar", command=lambda: seleccionar_archivo_propuesta(entry_propuesta, log_area))
     button_propuesta.grid(row=2, column=2, padx=10, pady=10)
 
     label_codebars = ttk.Label(root, text="Seleccionar Query de Codigos de Barras (CSV delimitado por punto y coma):")
@@ -56,7 +66,7 @@ def crear_inputs(root):
     entry_codebars = ttk.Entry(root, width=50)
     entry_codebars.grid(row=3, column=1, padx=10, pady=10)
 
-    button_codebars = ttk.Button(root, text="Buscar", command=lambda: seleccionar_archivo_codebars(entry_codebars))
+    button_codebars = ttk.Button(root, text="Buscar", command=lambda: seleccionar_archivo_codebars(entry_codebars, log_area))
     button_codebars.grid(row=3, column=2, padx=10, pady=10)
 
     return entry_archivo1, entry_archivo2, entry_propuesta, entry_codebars

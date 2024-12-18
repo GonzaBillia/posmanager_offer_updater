@@ -25,7 +25,7 @@ def procesar(entry_archivo1, entry_archivo2, entry_propuesta, entry_codebars):
     except ValueError as e:
         messagebox.showerror("Error", str(e))
 
-def crear_botones(root, entry_archivo1, entry_archivo2, entry_propuesta, entry_codebars):
+def crear_botones(root, entry_archivo1, entry_archivo2, entry_propuesta, entry_codebars, log_area):
     # Botón para procesar
-    button_procesar = tk.Button(root, text="Procesar Archivos", command=lambda: procesar(entry_archivo1, entry_archivo2, entry_propuesta, entry_codebars))
+    button_procesar = tk.Button(root, text="Procesar Archivos", command=lambda: procesar(entry_archivo1, entry_archivo2, entry_propuesta, entry_codebars, log_area))
     button_procesar.grid(row=4, column=0, columnspan=3, pady=20)
