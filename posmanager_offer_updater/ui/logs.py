@@ -1,6 +1,4 @@
-import sys
 import tkinter as tk
-from tkinter import scrolledtext
 
 class PrintRedirector:
     def __init__(self, widget):
@@ -16,13 +14,15 @@ class PrintRedirector:
 
 def configurar_logs(root):
     # Crear el área de texto para los logs
-    log_area = tk.Text(root, height=10, width=80, wrap=tk.WORD, state=tk.DISABLED)
+    log_area = tk.Text(root, height=10, width=100, wrap=tk.WORD, state=tk.DISABLED)
     log_area.grid(row=5, column=0, columnspan=3, pady=10)
     
-    return log_area
-
-def actualizar_log(message, log_area):
-    log_area.config(state=tk.NORMAL)  # Hacer el área de texto editable temporalmente
-    log_area.insert(tk.END, message + '\n')  # Insertar el mensaje con salto de línea
-    log_area.yview(tk.END)  # Desplazar hacia abajo
-    log_area.config(state=tk.DISABLED)  # Deshabilitar la edición
+    # Función anidada para actualizar logs
+    def actualizar_log(message):
+        log_area.config(state=tk.NORMAL)  # Hacer el área de texto editable temporalmente
+        log_area.insert(tk.END, message + '\n')  # Insertar el mensaje con salto de línea
+        log_area.yview(tk.END)  # Desplazar hacia abajo
+        log_area.config(state=tk.DISABLED)  # Deshabilitar la edición
+        root.update()  # Actualizar la interfaz
+    
+    return log_area, actualizar_log

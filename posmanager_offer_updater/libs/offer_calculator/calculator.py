@@ -1,6 +1,7 @@
 import pandas as pd
 import tkinter as tk
 from tkinter import filedialog, messagebox
+from ui.logs import actualizar_log
 import unicodedata
 
 def normalizar_texto(texto):
@@ -20,6 +21,7 @@ def calcular_ofertas(output_file, archivo_propuesta):
             propuesta_df = pd.read_excel(archivo_propuesta)
         except Exception as e:
             messagebox.showerror("Error", f"Error al leer los archivos: {e}")
+            actualizar_log("Error al leer los archivos para calcular")
             return
 
         # Normalizar texto en todas las columnas
@@ -31,12 +33,17 @@ def calcular_ofertas(output_file, archivo_propuesta):
 
         # Verificar existencia de columnas
         if "IDProducto" not in items_df.columns or propuesta_df.columns[0] != "Id Quantio":
-            messagebox.showerror("Error", "¡Faltan las columnas IDProducto o codigo_ERP!")
+            messagebox.showerror("Error", "¡Faltan las columnas IDProducto o Id Quantio o su nombre ha cambiado")
+            actualizar_log("Faltan las columnas IDProducto o Id Quantio o su nombre ha cambiado. Revisalo y vuelve a intentarlo")
+            actualizar_log(f"Columnas del archivo normalizado: [ {items_df} ]")
+            actualizar_log(f"Columnas del archivo de propuesta: [ {propuesta_df} ]")
             return
 
         # Asegurar que la columna Precio_de_Oferta_Etiquetas esté en la posición 23
         if "Precio_de_Oferta_Etiquetas" not in items_df.columns:
             messagebox.showerror("Error", "¡La columna Precio_de_Oferta_Etiquetas no existe en el archivo Items!")
+            actualizar_log("¡La columna Precio_de_Oferta_Etiquetas no existe en el archivo Items!")
+            actualizar_log(f"Columnas del archivo normalizado: [ {items_df} ]")
             return
 
         def calcular_precio_final(id_producto, precio_final):
@@ -59,7 +66,7 @@ def calcular_ofertas(output_file, archivo_propuesta):
                 return "", False  # Si no se encuentra el producto, devolver vacío
             except ValueError:
                 # Manejar si no se puede convertir el descuento o el precio a un número flotante
-                print(f"Error al convertir el descuento de {id_producto} o el precio a flotante.")
+                actualizar_log(f"Error al convertir el descuento de {id_producto} o el precio a flotante.")
                 return "", False
 
         # Calcular precios y agregar indicador de descuento
@@ -74,9 +81,12 @@ def calcular_ofertas(output_file, archivo_propuesta):
 
         items_df.iloc[:, 35] = ["S" if descuento else "N" for _, descuento in descuentos]
 
-        # Convertir las columnas 8, 23 y 24 al formato adecuado
-        items_df.iloc[:, [8, 22, 23]] = items_df.iloc[:, [8, 22, 23]].apply(pd.to_numeric, errors='coerce')
-        items_df.iloc[:, [8, 22, 23]] = items_df.iloc[:, [8, 22, 23]].fillna(0)  # Opcional: Manejo de NaN
+        # Reemplazar comas por puntos en las columnas y convertirlas a numérico
+        items_df.iloc[:, [8, 22, 23, 24]] = items_df.iloc[:, [8, 22, 23, 24]].replace(",", ".", regex=True)
+        items_df.iloc[:, [8, 22, 23, 24]] = items_df.iloc[:, [8, 22, 23, 24]].apply(pd.to_numeric, errors='coerce')
+
+        # Rellenar valores NaN con 0 (opcional)
+        items_df.iloc[:, [8, 22, 23, 24]] = items_df.iloc[:, [8, 22, 23, 24]].fillna(0)
 
         # Exportar archivo actualizado como TXT Unicode
         ruta_guardado = filedialog.asksaveasfilename(
@@ -87,10 +97,14 @@ def calcular_ofertas(output_file, archivo_propuesta):
 
         if ruta_guardado:
             items_df.to_csv(ruta_guardado, index=False, header=False, sep='\t', encoding='utf-16', float_format="%.2f")  # Especificar formato decimal
+            actualizar_log(f"archivo {ruta_guardado.title} guardado correctamente")
+            actualizar_log("---------- Proceso de calculo de oferta Terminado ----------")
             return True
         else:
             messagebox.showwarning("Cancelado", "La exportación fue cancelada.")
+            actualizar_log("La exportación fue cancelada.")
             return False
     except Exception as e:
         messagebox.showerror("Error", f"Ocurrió un error: {e}")
+        actualizar_log(f"Error {e}")
         return False
