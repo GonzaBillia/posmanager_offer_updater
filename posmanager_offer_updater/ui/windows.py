@@ -2,8 +2,32 @@ import tkinter as tk
 from tkinter import ttk, Frame
 from tkcalendar import DateEntry
 from datetime import datetime
+from ui.logs import get_logger
+
+actualizar_log = get_logger()
 
 def ventana_query_quantio(root):
+
+    def calcular_dias():
+        # Obtener la fecha seleccionada
+        fecha_seleccionada = str(calendar.get_date())
+
+        # Convertir la fecha seleccionada a un objeto datetime
+        fecha_seleccionada = datetime.strptime(fecha_seleccionada, '%Y-%m-%d')
+
+        # Obtener la fecha actual
+        fecha_actual = datetime.now()
+
+        # Calcular la diferencia en días
+        dias = (fecha_actual - fecha_seleccionada).days
+        
+        # Guardar la cantidad de días en una variable
+        dias_variable = dias
+
+        actualizar_log("Preferencias guardadas")
+
+        ventana_query_quantio.destroy()
+
     # Crear la nueva ventana secundaria
     ventana_query_quantio = tk.Toplevel(root)
     ventana_query_quantio.title("Query Quantio")
@@ -43,8 +67,11 @@ def ventana_query_quantio(root):
     calendar = DateEntry(sub_frame_date, date_pattern="mm/dd/yyyy", width=12, maxdate=datetime.now())
     calendar.pack(side="left", pady=10, padx=10)
 
+    guardar_button = ttk.Button(frame_buttons, text="Guardar", command=lambda: calcular_dias())
+    guardar_button.pack(side="right", pady=10, padx=10)
+
     # Botón para cerrar la ventana secundaria
-    cerrar_button = ttk.Button(frame_buttons, text="Cerrar", command=ventana_query_quantio.destroy)
+    cerrar_button = ttk.Button(frame_buttons, text="Cerrar", command=lambda: ventana_query_quantio.destroy())
     cerrar_button.pack(side="right", pady=10, padx=10)
 
     return ventana_query_quantio

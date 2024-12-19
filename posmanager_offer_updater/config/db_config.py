@@ -53,3 +53,34 @@ class DBConfig:
             actualizar_log("Comprueba tu configuración.")
             return None
 
+    def check_connection(self):
+        """Verifica si la conexión está activa."""
+        try:
+            if self.connection and self.connection.is_connected():
+                return True
+            else:
+                actualizar_log("Conexión no activa. Reconectando")
+                self.create_connection()  # Reintenta conectar
+                return self.connection and self.connection.is_connected()
+        except Error as e:
+            actualizar_log(f"Error al verificar la conexión: {e}")
+            return False
+
+    def close_connection(self):
+        if self.connection:
+            self.connection.close()
+    
+    def open_cursor(self):
+        if self.check_connection():
+            try:
+                self.cursor = self.connection.cursor(dictionary=True)
+                actualizar_log("cursor abierto para realizar consulta")
+                return self.cursor
+            except Error as e:
+                actualizar_log(f"Ocurrio un error al querer abrir el cursor {e}")
+                raise e
+        else:
+            actualizar_log("La conexión no está activa. No se pudo abrir el cursor.")
+            raise ConnectionError("No se pudo abrir el cursor porque la conexión no está activa.")
+    
+

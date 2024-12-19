@@ -58,12 +58,6 @@ def db_connection_thread():
     actualizar_log("Conectando a la base de datos...")
     connect_to_db()
 
-def cerrar_conexion_db(connection, cursor):
-    if cursor:
-        cursor.close()
-    if connection:
-        connection.close()
-
 
 # Función para manejar el cierre de la ventana
 def on_closing():
@@ -73,7 +67,7 @@ def on_closing():
         # Cerrar la conexión de la base de datos
         # Cerrar la conexión de la base de datos aquí
         actualizar_log("Finalizando Procesos")
-        cerrar_conexion_db(db_config.connection, db_config.cursor)
+        db_config.close_connection()
         actualizar_log("Conexion a base de datos cerrada")
         root.destroy()  # Cerrar la ventana y terminar el programa
 
