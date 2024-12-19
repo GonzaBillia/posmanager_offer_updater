@@ -40,35 +40,15 @@ class DBConfig:
                 host=self.config["DB_HOST"],
                 user=self.config["DB_USER"],
                 password=self.config["DB_PASSWORD"],
-                database=self.config["DB_DATABASE"]
+                database=self.config["DB_DATABASE"],
+                port=self.config["DB_PORT"]
             )
 
             if self.connection.is_connected():
-                actualizar_log("Conexión a la base de datos exitosa.")
+                actualizar_log("Conexión exitosa!")
                 return self.connection
         except (Error, FileNotFoundError, ValueError, KeyError) as e:
-            actualizar_log(f"Error al conectar a la base de datos: {e}")
+            actualizar_log(f"Ha ocurrido un error en la conexion: {e}")
+            actualizar_log("Comprueba tu configuración.")
             return None
 
-    def wait_for_config_change(self):
-        """Espera a que el archivo de configuración sea modificado y recarga la configuración."""
-        actualizar_log("Esperando cambios en el archivo de configuración...")
-        while True:
-            try:
-                # Esperar 5 segundos entre cada intento de recarga
-                time.sleep(5)
-                self.load_config()
-                actualizar_log("Archivo de configuración recargado.")
-                return
-            except Exception as e:
-                actualizar_log(f"Error al cargar configuración: {e}")
-                actualizar_log("Esperando nuevo intento...")
-
-    def reload_config(self):
-        """Recargar la configuración y probar la conexión nuevamente."""
-        self.connection = self.create_connection()
-        if self.connection:
-            actualizar_log("Conexión exitosa tras recargar configuración.")
-        else:
-            actualizar_log("No se pudo conectar, esperando cambios en el archivo de configuración.")
-            self.wait_for_config_change()

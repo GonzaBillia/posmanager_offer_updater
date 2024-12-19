@@ -32,7 +32,8 @@ def procesar(entry_archivo1, entry_archivo2, entry_propuesta, entry_codebars):
         messagebox.showerror("Error", str(e))
         actualizar_log("Error: ")
 
-def crear_botones(root, entry_archivo1, entry_archivo2, entry_propuesta, entry_codebars, reload_db_config):
+
+def crear_botones(root, entry_archivo1, entry_archivo2, entry_propuesta, entry_codebars, db_connection_thread):
     # Botón para procesar
     button_procesar = tk.Button(
         root, 
@@ -45,7 +46,17 @@ def crear_botones(root, entry_archivo1, entry_archivo2, entry_propuesta, entry_c
     reload_button = tk.Button(
         root, 
         text="Recargar", 
-        command=reload_db_config  # Asignar la función recargada
+        command=db_connection_thread  # Asignar la función recargada
     )
     reload_button.grid(row=4, column=1, pady=20, padx=10)
+
+    return button_procesar, reload_button
+
+# Función para desactivar el botón de recarga
+def desactivar_boton_recarga(reload_button):
+    reload_button.config(state=tk.DISABLED)  # Desactivar el botón
+
+# Función para activar el botón de recarga
+def activar_boton_recarga(reload_button):
+    reload_button.config(state=tk.NORMAL)  # Reactivar el botón
 
