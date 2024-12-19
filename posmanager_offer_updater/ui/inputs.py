@@ -1,7 +1,10 @@
 import tkinter as tk
 from tkinter import ttk
 from tkinter import filedialog
-from ui.logs import actualizar_log
+from ui.logs import get_logger
+
+# Obtener la función para actualizar logs
+actualizar_log = get_logger()
 
 def seleccionar_archivo_entrada1(entry_archivo1):
     file_path = filedialog.askopenfilename(title="Seleccionar la consulta de la Base de Datos", filetypes=[("Archivos CSV", "*.csv"), ("Archivos Excel", "*.xlsx;*.xls")])

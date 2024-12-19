@@ -1,9 +1,12 @@
 import tkinter as tk
 from tkinter import messagebox
-from ui.logs import actualizar_log
+from ui.logs import get_logger
 from libs.update_normalizer import procesar_archivos
 from libs.offer_calculator import calcular_ofertas
 from libs.barcode_selector import seleccionar_barcodes
+
+# Obtener la función para actualizar logs
+actualizar_log = get_logger()
 
 def procesar(entry_archivo1, entry_archivo2, entry_propuesta, entry_codebars):
     file_path1 = entry_archivo1.get()

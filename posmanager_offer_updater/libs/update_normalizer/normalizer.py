@@ -1,7 +1,10 @@
 import pandas as pd
 import os
 from datetime import datetime
-from ui.logs import actualizar_log
+from ui.logs import get_logger
+
+# Obtener la función para actualizar logs
+actualizar_log = get_logger()
 
 
 def procesar_archivos(file_path1, file_path2):

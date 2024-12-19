@@ -1,8 +1,11 @@
 import pandas as pd
 import tkinter as tk
 from tkinter import filedialog, messagebox
-from ui.logs import actualizar_log
+from ui.logs import get_logger
 import unicodedata
+
+# Obtener la función para actualizar logs
+actualizar_log = get_logger()
 
 def normalizar_texto(texto):
     if isinstance(texto, str):
@@ -97,7 +100,7 @@ def calcular_ofertas(output_file, archivo_propuesta):
 
         if ruta_guardado:
             items_df.to_csv(ruta_guardado, index=False, header=False, sep='\t', encoding='utf-16', float_format="%.2f")  # Especificar formato decimal
-            actualizar_log(f"archivo {ruta_guardado.title} guardado correctamente")
+            actualizar_log(f"archivo guardado correctamente")
             actualizar_log("---------- Proceso de calculo de oferta Terminado ----------")
             return True
         else:
