@@ -3,7 +3,7 @@ import mysql.connector
 from mysql.connector import Error
 from ui.logs import get_logger
 import os
-import time
+
 
 # Obtener la función para actualizar logs
 actualizar_log = get_logger()
@@ -13,6 +13,7 @@ class DBConfig:
         self.config_path = config_path
         self.config = None
         self.connection = None
+        self.cursor = None
 
     def load_config(self):
         """Carga el archivo JSON con las credenciales de la base de datos."""

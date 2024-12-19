@@ -2,6 +2,7 @@ import tkinter as tk
 from tkinter import ttk
 from tkinter import filedialog
 from ui.logs import get_logger
+from ui.windows import ventana_query_quantio
 
 # Obtener la función para actualizar logs
 actualizar_log = get_logger()
@@ -45,6 +46,10 @@ def crear_inputs(root):
     button_archivo1 = ttk.Button(root, text="Buscar", command=lambda: seleccionar_archivo_entrada1(entry_archivo1))
     button_archivo1.grid(row=0, column=2, padx=10, pady=10)
 
+    button_query = ttk.Button(root, text="Query", command=lambda: ventana_query_quantio(root))
+    button_query.grid(row=0, column=3, padx=10, pady=10)
+
+
     label_archivo2 = ttk.Label(root, text="Seleccionar la lista de Items de POSManager (TXT delimitado por comas):")
     label_archivo2.grid(row=1, column=0, padx=10, pady=10)
 
@@ -53,6 +58,7 @@ def crear_inputs(root):
 
     button_archivo2 = ttk.Button(root, text="Buscar", command=lambda: seleccionar_archivo_entrada2(entry_archivo2))
     button_archivo2.grid(row=1, column=2, padx=10, pady=10)
+
 
     label_propuesta = ttk.Label(root, text="Seleccionar archivo de Propuesta (Excel):")
     label_propuesta.grid(row=2, column=0, padx=10, pady=10)
@@ -63,6 +69,7 @@ def crear_inputs(root):
     button_propuesta = ttk.Button(root, text="Buscar", command=lambda: seleccionar_archivo_propuesta(entry_propuesta))
     button_propuesta.grid(row=2, column=2, padx=10, pady=10)
 
+
     label_codebars = ttk.Label(root, text="Seleccionar Query de Codigos de Barras (CSV delimitado por punto y coma):")
     label_codebars.grid(row=3, column=0, padx=10, pady=10)
 
@@ -71,5 +78,6 @@ def crear_inputs(root):
 
     button_codebars = ttk.Button(root, text="Buscar", command=lambda: seleccionar_archivo_codebars(entry_codebars))
     button_codebars.grid(row=3, column=2, padx=10, pady=10)
+
 
     return entry_archivo1, entry_archivo2, entry_propuesta, entry_codebars

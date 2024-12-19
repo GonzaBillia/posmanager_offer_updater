@@ -1,8 +1,13 @@
 import tkinter as tk
 import os
+import time
 import threading
-from tkinter import ttk
+from tkinter import messagebox
 from ui.logs import configurar_logger, get_logger
+
+
+
+# CONFIGURACION INICIAL DE LA VENTANA
 
 # Crear la ventana principal
 root = tk.Tk()
@@ -11,6 +16,12 @@ root.title("Procesamiento de Archivos para POSManager")
 # Configurar el logger global y Obtener la función para actualizar logs
 configurar_logger(root)
 actualizar_log = get_logger()
+
+# CONFIGURACION INICIAL DE LA VENTANA
+
+
+
+# CONFIGURACION INICIAL DE DB Y ELEMENTOS UI
 
 # imports posteriores a la configuracion
 from ui.inputs import crear_inputs
@@ -29,7 +40,6 @@ db_config = DBConfig(config_path)
 # Variable global para controlar el estado de la conexión
 conexion_en_proceso = False
 
-
 # Función para intentar conectar a la base de datos
 def connect_to_db():
     global conexion_en_proceso
@@ -37,7 +47,7 @@ def connect_to_db():
     # Desactivar el botón de recarga mientras se conecta
     root.after(0, lambda: desactivar_boton_recarga(reload_button))
     
-    connection = db_config.create_connection()
+    db_config.create_connection()
     
     # Reactivar el botón de recarga después de intentar la conexión
     conexion_en_proceso = False
@@ -48,10 +58,38 @@ def db_connection_thread():
     actualizar_log("Conectando a la base de datos...")
     connect_to_db()
 
+def cerrar_conexion_db(connection, cursor):
+    if cursor:
+        cursor.close()
+    if connection:
+        connection.close()
+
+
+# Función para manejar el cierre de la ventana
+def on_closing():
+    respuesta = messagebox.askquestion("Confirmar cierre", "¿Estás seguro de que deseas cerrar la ventana?")
+    
+    if respuesta == 'yes':
+        # Cerrar la conexión de la base de datos
+        # Cerrar la conexión de la base de datos aquí
+        actualizar_log("Finalizando Procesos")
+        cerrar_conexion_db(db_config.connection, db_config.cursor)
+        actualizar_log("Conexion a base de datos cerrada")
+        root.destroy()  # Cerrar la ventana y terminar el programa
+
+# Configurar la ventana para que ejecute on_closing al cerrarla
+root.protocol("WM_DELETE_WINDOW", on_closing)
+
 
 # Crear los inputs y los botones desde los módulos correspondientes
 entry_archivo1, entry_archivo2, entry_propuesta, entry_codebars = crear_inputs(root)
 button_procesar, reload_button = crear_botones(root, entry_archivo1, entry_archivo2, entry_propuesta, entry_codebars, db_connection_thread)
+
+# CONFIGURACION INICIAL DE DB Y ELEMENTOS UI
+
+
+
+# INICIALIZACION DE LA APLICACION E HILOS
 
 # Agregar un mensaje inicial al log
 actualizar_log("Aplicación iniciada")
@@ -62,3 +100,4 @@ threading.Thread(target=db_connection_thread, daemon=True).start()
 # Iniciar el bucle principal de la aplicación
 root.mainloop()
 
+# INICIALIZACION DE LA APLICACION E HILOS

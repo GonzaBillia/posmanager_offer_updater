@@ -1,5 +1,5 @@
 import tkinter as tk
-from tkinter import messagebox
+from tkinter import messagebox, ttk
 from ui.logs import get_logger
 from libs.update_normalizer import procesar_archivos
 from libs.offer_calculator import calcular_ofertas
@@ -35,7 +35,7 @@ def procesar(entry_archivo1, entry_archivo2, entry_propuesta, entry_codebars):
 
 def crear_botones(root, entry_archivo1, entry_archivo2, entry_propuesta, entry_codebars, db_connection_thread):
     # Botón para procesar
-    button_procesar = tk.Button(
+    button_procesar = ttk.Button(
         root, 
         text="Procesar Archivos", 
         command=lambda: procesar(entry_archivo1, entry_archivo2, entry_propuesta, entry_codebars)
@@ -43,7 +43,7 @@ def crear_botones(root, entry_archivo1, entry_archivo2, entry_propuesta, entry_c
     button_procesar.grid(row=4, column=0, columnspan=1, pady=20, padx=10)
 
     # Botón para recargar la configuración y probar la conexión
-    reload_button = tk.Button(
+    reload_button = ttk.Button(
         root, 
         text="Recargar", 
         command=db_connection_thread  # Asignar la función recargada
