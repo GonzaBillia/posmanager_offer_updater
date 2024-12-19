@@ -43,5 +43,8 @@ def guardar_resultados_como_csv(results,final_path,name):
             writer.writerows(results)
         
         actualizar_log(f"Resultados guardados exitosamente en {output_file}.")
+
+        return output_file
     except Exception as e:
         actualizar_log(f"Error al guardar resultados en CSV: {e}")
+        raise e

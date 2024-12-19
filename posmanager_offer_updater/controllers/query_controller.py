@@ -5,7 +5,7 @@ from queries.quantio import cod1, cod2, Q_PRODUCTS
 
 actualizar_log = get_logger()
 
-def quantio_updated_productos(day_filter):
+def quantio_updated_products(day_filter):
     try:
         cursor = db.open_cursor()
         
@@ -18,6 +18,9 @@ def quantio_updated_productos(day_filter):
         
         # Obtener los resultados
         resultados = cursor.fetchall()
+
+        actualizar_log("Se realizo la consulta a la base de datos correctamente")
+        
         return resultados
     except mysql.connector.Error as e:
         actualizar_log(f"Error ejecutando la consulta: {e}")

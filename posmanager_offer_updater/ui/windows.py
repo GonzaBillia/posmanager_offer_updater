@@ -2,13 +2,15 @@ import tkinter as tk
 from tkinter import ttk, Frame
 from tkcalendar import DateEntry
 from datetime import datetime
+from libs.orquestators.quantio_items import process_file
+from ui.inputs import seleccionar_archivo_entrada1
 from ui.logs import get_logger
 
 actualizar_log = get_logger()
 
 def ventana_query_quantio(root):
 
-    def calcular_dias():
+    def calc_and_request():
         # Obtener la fecha seleccionada
         fecha_seleccionada = str(calendar.get_date())
 
@@ -24,9 +26,10 @@ def ventana_query_quantio(root):
         # Guardar la cantidad de días en una variable
         dias_variable = dias
 
-        actualizar_log("Preferencias guardadas")
+        output_file = process_file(dias_variable)
 
-        ventana_query_quantio.destroy()
+        seleccionar_archivo_entrada1(output_file)
+        
 
     # Crear la nueva ventana secundaria
     ventana_query_quantio = tk.Toplevel(root)
@@ -52,12 +55,6 @@ def ventana_query_quantio(root):
     # Etiqueta en la ventana secundaria
     label = tk.Label(frame_top_label, text="Control de Query")
     label.pack(side="left", pady=10, padx=10)
-    
-
-    check_include_meds = tk.BooleanVar(value=False)
-
-    filter_meds = tk.Checkbutton(frame_filters, text="Incluir medicamentos", variable=check_include_meds)
-    filter_meds.pack(side="top", anchor="w", padx=10, pady=10)
 
     # Descripción para el DateEntry
     label_date = tk.Label(sub_frame_date, text="Selecciona una fecha:")
@@ -67,7 +64,7 @@ def ventana_query_quantio(root):
     calendar = DateEntry(sub_frame_date, date_pattern="mm/dd/yyyy", width=12, maxdate=datetime.now())
     calendar.pack(side="left", pady=10, padx=10)
 
-    guardar_button = ttk.Button(frame_buttons, text="Guardar", command=lambda: calcular_dias())
+    guardar_button = ttk.Button(frame_buttons, text="Consultar", command=lambda: calc_and_request())
     guardar_button.pack(side="right", pady=10, padx=10)
 
     # Botón para cerrar la ventana secundaria
