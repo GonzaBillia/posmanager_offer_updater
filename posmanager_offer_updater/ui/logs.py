@@ -31,11 +31,15 @@ def configurar_logger(root):
 
     # Definir la función para actualizar los logs
     def log(message):
-        log_area.config(state=tk.NORMAL)
-        log_area.insert(tk.END, message + '\n')
-        log_area.yview(tk.END)
-        log_area.config(state=tk.DISABLED)
-        root.update()
+        try:
+            log_area.config(state=tk.NORMAL)
+            log_area.insert(tk.END, message + '\n')
+            log_area.yview(tk.END)
+            log_area.config(state=tk.DISABLED)
+            root.update()
+        except:
+            tk.TclError
+            pass
 
     # Asignar la función al logger global
     actualizar_log = log

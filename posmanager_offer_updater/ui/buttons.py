@@ -32,7 +32,20 @@ def procesar(entry_archivo1, entry_archivo2, entry_propuesta, entry_codebars):
         messagebox.showerror("Error", str(e))
         actualizar_log("Error: ")
 
-def crear_botones(root, entry_archivo1, entry_archivo2, entry_propuesta, entry_codebars):
+def crear_botones(root, entry_archivo1, entry_archivo2, entry_propuesta, entry_codebars, reload_db_config):
     # Botón para procesar
-    button_procesar = tk.Button(root, text="Procesar Archivos", command=lambda: procesar(entry_archivo1, entry_archivo2, entry_propuesta, entry_codebars))
-    button_procesar.grid(row=4, column=0, columnspan=3, pady=20)
+    button_procesar = tk.Button(
+        root, 
+        text="Procesar Archivos", 
+        command=lambda: procesar(entry_archivo1, entry_archivo2, entry_propuesta, entry_codebars)
+    )
+    button_procesar.grid(row=4, column=0, columnspan=1, pady=20, padx=10)
+
+    # Botón para recargar la configuración y probar la conexión
+    reload_button = tk.Button(
+        root, 
+        text="Recargar", 
+        command=reload_db_config  # Asignar la función recargada
+    )
+    reload_button.grid(row=4, column=1, pady=20, padx=10)
+
