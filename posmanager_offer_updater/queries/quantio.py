@@ -73,8 +73,8 @@ Q_PRODUCTS = """
         productos.idTipoIVA,
         'N' AS 'Aplica_Percepcion_5329',
         '-1' AS 'Costo _el_articulo',
-        productos.idProveedor,
-        productos.IDRubro,
+        IFNULL(productos.idProveedor, 0) AS idProveedor,
+        IFNULL(productos.IDRubro, 0) AS IDRubro,
         IFNULL(productos.idMarca, 0) AS idMarca,  -- IFNULL en idMarca
         '01/12/2024' AS 'Fecha Inicio',
         '31/12/2024' AS 'Fecha Fin'

@@ -3,7 +3,8 @@ import os
 from tkinter import ttk
 from tkinter import filedialog
 from ui.logs import get_logger
-from ui.windows import ventana_query_quantio
+from ui.windows import ventana_query_quantio, config
+from controllers.file_controller import read_query_config
 
 # Obtener la función para actualizar logs
 actualizar_log = get_logger()
@@ -32,8 +33,11 @@ def seleccionar_archivo_codebars(entry_codebars):
 def crear_inputs(root):
     default_propuesta = os.path.expanduser('~\\Documents\\PM-offer-updater\\import\\Propuesta.xlsx')
     # Inputs y botones para los archivos
-    label_archivo1 = ttk.Label(root, text="Seleccionar la consulta de la Base de Datos (CSV delimitado por punto y coma):")
+    label_archivo1 = ttk.Label(root, text="Items actualizados recientemente (Consulta a la base de datos):")
     label_archivo1.grid(row=0, column=0, padx=10, pady=10)
+
+    label2_archivo1 = ttk.Label(root, text=f"Cantidad de dias contemplados: {config['dias']}")
+    label2_archivo1.grid(row=0, column=1, padx=10, pady=10)
 
     button_query = ttk.Button(root, text="Filtro", command=lambda: ventana_query_quantio(root))
     button_query.grid(row=0, column=2, padx=10, pady=10)
@@ -59,7 +63,7 @@ def crear_inputs(root):
     button_propuesta.grid(row=2, column=2, padx=10, pady=10)
 
 
-    label_codebars = ttk.Label(root, text="Seleccionar Query de Codigos de Barras (CSV delimitado por punto y coma):")
+    label_codebars = ttk.Label(root, text="Codigos de barras actualizados (Consulta a la base de datos)")
     label_codebars.grid(row=3, column=0, padx=10, pady=10)
 
     entry_propuesta.insert(0, default_propuesta)

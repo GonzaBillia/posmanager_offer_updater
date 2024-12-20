@@ -2,14 +2,16 @@ import tkinter as tk
 from tkinter import ttk, Frame
 from tkcalendar import DateEntry
 from datetime import datetime
-from controllers.file_controller import save_query_config
+from controllers.file_controller import save_query_config, read_query_config
 from ui.logs import get_logger
 
 actualizar_log = get_logger()
+config = read_query_config()
 
 def ventana_query_quantio(root):
 
     def save_config():
+        global config
         # Obtener la fecha seleccionada
         fecha_seleccionada = str(calendar.get_date())
 
@@ -24,12 +26,12 @@ def ventana_query_quantio(root):
 
         
         # Guardar la cantidad de días en una variable
-        config = {
+        configuracion = {
             'dias': dias
         }
 
-        save_query_config(config)
-    
+        save_query_config(configuracion)
+
         
 
     # Crear la nueva ventana secundaria
