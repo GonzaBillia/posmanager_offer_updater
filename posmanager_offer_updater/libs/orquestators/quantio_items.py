@@ -4,7 +4,7 @@ from ui.logs import get_logger
 
 actualizar_log = get_logger()
 
-file_path = "processed_files"
+file_path = "processed-files"
 name = "items"
 
 def process_file(day_filter):

@@ -2,15 +2,14 @@ import tkinter as tk
 from tkinter import ttk, Frame
 from tkcalendar import DateEntry
 from datetime import datetime
-from libs.orquestators.quantio_items import process_file
-from ui.inputs import seleccionar_archivo_entrada1
+from controllers.file_controller import save_query_config
 from ui.logs import get_logger
 
 actualizar_log = get_logger()
 
 def ventana_query_quantio(root):
 
-    def calc_and_request():
+    def save_config():
         # Obtener la fecha seleccionada
         fecha_seleccionada = str(calendar.get_date())
 
@@ -22,13 +21,15 @@ def ventana_query_quantio(root):
 
         # Calcular la diferencia en días
         dias = (fecha_actual - fecha_seleccionada).days
+
         
         # Guardar la cantidad de días en una variable
-        dias_variable = dias
+        config = {
+            'dias': dias
+        }
 
-        output_file = process_file(dias_variable)
-
-        seleccionar_archivo_entrada1(output_file)
+        save_query_config(config)
+    
         
 
     # Crear la nueva ventana secundaria
@@ -64,7 +65,7 @@ def ventana_query_quantio(root):
     calendar = DateEntry(sub_frame_date, date_pattern="mm/dd/yyyy", width=12, maxdate=datetime.now())
     calendar.pack(side="left", pady=10, padx=10)
 
-    guardar_button = ttk.Button(frame_buttons, text="Consultar", command=lambda: calc_and_request())
+    guardar_button = ttk.Button(frame_buttons, text="Guardar", command=lambda: save_config())
     guardar_button.pack(side="right", pady=10, padx=10)
 
     # Botón para cerrar la ventana secundaria

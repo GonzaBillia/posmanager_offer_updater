@@ -1,4 +1,5 @@
 import os
+import json
 import csv
 from datetime import datetime
 from ui.logs import get_logger
@@ -48,3 +49,44 @@ def guardar_resultados_como_csv(results,final_path,name):
     except Exception as e:
         actualizar_log(f"Error al guardar resultados en CSV: {e}")
         raise e
+
+def save_query_config(data):
+    # Definir la ruta del directorio de salida
+    output_dir = os.path.expanduser('~\\Documents\\PM-offer-updater\\config')
+
+    # Verificar si la carpeta existe; si no, crearla
+    if not os.path.exists(output_dir):
+        os.makedirs(output_dir)
+        actualizar_log(f"Directorio creado: {output_dir}")
+
+    # Nombre del archivo de configuración
+    archivo_configuracion = os.path.join(output_dir, "config_query_filters.json")
+
+    # Guardar la configuración en el archivo
+    with open(archivo_configuracion, 'w') as json_file:
+        json.dump(data, json_file, indent=4)
+
+    # Imprimir y registrar en el log
+    actualizar_log(f"Configuración guardada en: {archivo_configuracion}")
+
+def read_query_config():
+    # Definir la ruta del directorio de configuración
+    configuraciones_dir = os.path.expanduser('~\\Documents\\PM-offer-updater\\config')
+    archivo_configuracion = os.path.join(configuraciones_dir, "config_query_filters.json")
+
+    # Verificar si el archivo existe
+    if not os.path.exists(archivo_configuracion):
+        actualizar_log(f"El archivo de configuración no existe: {archivo_configuracion}")
+        return None
+
+    try:
+        # Leer el archivo JSON
+        with open(archivo_configuracion, 'r') as json_file:
+            configuracion = json.load(json_file)
+        
+        actualizar_log(f"Configuración cargada desde: {archivo_configuracion}")
+        return configuracion
+
+    except Exception as e:
+        actualizar_log(f"Error al leer el archivo de configuración: {str(e)}")
+        return None

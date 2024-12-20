@@ -43,13 +43,13 @@ def crear_inputs(root):
     label_archivo1 = ttk.Label(root, text="Seleccionar la consulta de la Base de Datos (CSV delimitado por punto y coma):")
     label_archivo1.grid(row=0, column=0, padx=10, pady=10)
 
-    entry_archivo1 = ttk.Entry(root, width=50)
-    entry_archivo1.grid(row=0, column=1, padx=10, pady=10)
+    # entry_archivo1 = ttk.Entry(root, width=50)
+    # entry_archivo1.grid(row=0, column=1, padx=10, pady=10)
 
     # button_archivo1 = ttk.Button(root, text="Buscar", command=lambda: seleccionar_archivo_entrada1(entry_archivo1))
     # button_archivo1.grid(row=0, column=2, padx=10, pady=10)
 
-    button_query = ttk.Button(root, text="Query", command=lambda: ventana_query_quantio(root))
+    button_query = ttk.Button(root, text="Filtro", command=lambda: ventana_query_quantio(root))
     button_query.grid(row=0, column=3, padx=10, pady=10)
 
 
@@ -83,4 +83,4 @@ def crear_inputs(root):
     button_codebars.grid(row=3, column=2, padx=10, pady=10)
 
 
-    return entry_archivo1, entry_archivo2, entry_propuesta, entry_codebars
+    return entry_archivo2, entry_propuesta, entry_codebars

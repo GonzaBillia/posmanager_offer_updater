@@ -2,9 +2,6 @@ cod1 = 'SET @codigoInterno1 = 1;'
 cod2 = 'SET @codigoInterno2 = 8001;'
 
 Q_PRODUCTS = """
-SET @codigoInterno1 = 1;
-SET @codigoInterno2 = 8001;
-
 SELECT 
     CASE
         WHEN productos.idItem IN (5, 7) AND LENGTH(LTRIM(productos.Codebar)) <= 5 THEN 

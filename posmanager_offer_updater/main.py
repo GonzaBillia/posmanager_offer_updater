@@ -5,8 +5,6 @@ import threading
 from tkinter import messagebox
 from ui.logs import configurar_logger, get_logger
 
-
-
 # CONFIGURACION INICIAL DE LA VENTANA
 
 # Crear la ventana principal
@@ -42,13 +40,16 @@ conexion_en_proceso = False
 
 # Función para intentar conectar a la base de datos
 def connect_to_db():
+    
     global conexion_en_proceso
     conexion_en_proceso = True
     # Desactivar el botón de recarga mientras se conecta
     root.after(0, lambda: desactivar_boton_recarga(reload_button))
+    connection = db_config.create_connection()
     
-    db_config.create_connection()
-    
+    if connection:
+        connection.close()
+
     # Reactivar el botón de recarga después de intentar la conexión
     conexion_en_proceso = False
     root.after(0, lambda: activar_boton_recarga(reload_button))
@@ -76,8 +77,8 @@ root.protocol("WM_DELETE_WINDOW", on_closing)
 
 
 # Crear los inputs y los botones desde los módulos correspondientes
-entry_archivo1, entry_archivo2, entry_propuesta, entry_codebars = crear_inputs(root)
-button_procesar, reload_button = crear_botones(root, entry_archivo1, entry_archivo2, entry_propuesta, entry_codebars, db_connection_thread)
+entry_archivo2, entry_propuesta, entry_codebars = crear_inputs(root)
+button_procesar, reload_button = crear_botones(root, entry_archivo2, entry_propuesta, entry_codebars, db_connection_thread)
 
 # CONFIGURACION INICIAL DE DB Y ELEMENTOS UI
 
