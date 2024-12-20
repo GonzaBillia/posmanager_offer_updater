@@ -7,16 +7,6 @@ from ui.windows import ventana_query_quantio
 # Obtener la función para actualizar logs
 actualizar_log = get_logger()
 
-# def seleccionar_archivo_entrada1(output_file):
-#     # file_path = filedialog.askopenfilename(title="Seleccionar la consulta de la Base de Datos", filetypes=[("Archivos CSV", "*.csv"), ("Archivos Excel", "*.xlsx;*.xls")])
-#     # if file_path:
-#     #     entry_archivo1.delete(0, tk.END)
-#     #     entry_archivo1.insert(0, file_path)
-#     #     actualizar_log(f"Archivo de base de datos seleccionado: {file_path}")
-#     # Asignar la ruta del archivo output_file al entry
-#     entry_archivo1.delete(0, tk.END)  # Limpiar el campo actual
-#     entry_archivo1.insert(0, output_file) 
-
 def seleccionar_archivo_entrada2(entry_archivo2):
     file_path = filedialog.askopenfilename(title="Seleccionar la lista de Items de POSManager", filetypes=[("Archivos TXT", "*.txt"), ("Archivos CSV", "*.csv"), ("Archivos Excel", "*.xlsx;*.xls")])
     if file_path:

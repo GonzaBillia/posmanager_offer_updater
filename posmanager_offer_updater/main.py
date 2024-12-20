@@ -1,6 +1,5 @@
 import tkinter as tk
 import os
-import time
 import threading
 from tkinter import messagebox
 from ui.logs import configurar_logger, get_logger
@@ -47,7 +46,7 @@ def connect_to_db():
 
 # Función para manejar la conexión en un hilo separado
 def db_connection_thread():
-    actualizar_log("Conectando a la base de datos...")
+    actualizar_log("Probando conexion a la base de datos...")
     connect_to_db()
 
 
@@ -59,8 +58,6 @@ def on_closing():
         # Cerrar la conexión de la base de datos
         # Cerrar la conexión de la base de datos aquí
         actualizar_log("Finalizando Procesos")
-        db_config.close_connection()
-        actualizar_log("Conexion a base de datos cerrada")
         root.destroy()  # Cerrar la ventana y terminar el programa
 
 # Configurar la ventana para que ejecute on_closing al cerrarla
