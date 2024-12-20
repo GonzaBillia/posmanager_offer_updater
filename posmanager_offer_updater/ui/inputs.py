@@ -60,11 +60,5 @@ def crear_inputs(root):
     label_codebars = ttk.Label(root, text="Seleccionar Query de Codigos de Barras (CSV delimitado por punto y coma):")
     label_codebars.grid(row=3, column=0, padx=10, pady=10)
 
-    entry_codebars = ttk.Entry(root, width=50)
-    entry_codebars.grid(row=3, column=1, padx=10, pady=10)
 
-    button_codebars = ttk.Button(root, text="Buscar", command=lambda: seleccionar_archivo_codebars(entry_codebars))
-    button_codebars.grid(row=3, column=2, padx=10, pady=10)
-
-
-    return entry_archivo2, entry_propuesta, entry_codebars
+    return entry_archivo2, entry_propuesta

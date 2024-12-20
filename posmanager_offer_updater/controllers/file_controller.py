@@ -1,4 +1,5 @@
 import os
+import subprocess
 import datetime
 import shutil
 import json
@@ -102,11 +103,11 @@ def save_processed_files():
     output_dir_items = os.path.expanduser('~\\Documents\\PM-offer-updater\\processed-files\\calculated-items')
 
     # Definir la ruta de destino en Results
-    output_dir_results = os.path.expanduser(f'~\\Documents\\PM-offer-updater\\processed-files\\Results\\{fecha_hoy}')
+    file_path = os.path.expanduser(f'~\\Documents\\PM-offer-updater\\processed-files\\Results\\{fecha_hoy}')
 
     # Crear la carpeta Results si no existe
-    if not os.path.exists(output_dir_results):
-        os.makedirs(output_dir_results)
+    if not os.path.exists(file_path):
+        os.makedirs(file_path)
 
     # Función para buscar y copiar el archivo a la carpeta de destino
     def copiar_archivo(archivo_origen, destino, nuevo_nombre):
@@ -119,11 +120,25 @@ def save_processed_files():
 
     # Buscar y copiar el archivo `Items`
     items_file = os.path.join(output_dir_items, f"calc-items-{fecha_hoy}.txt")  # O el nombre real del archivo
-    copiar_archivo(items_file, output_dir_results, "Items.txt")
+    copiar_archivo(items_file, file_path, "Items.txt")
 
     # Buscar y copiar el archivo `Codebars`
     codebars_file = os.path.join(output_dir_codebars, f"CodBarras-{fecha_hoy}.txt")  # O el nombre real del archivo
-    copiar_archivo(codebars_file, output_dir_results, "CodBarras.txt")
+    copiar_archivo(codebars_file, file_path, "CodBarras.txt")
+
 
     # Registro de la acción final
     actualizar_log("Archivos copiados correctamente a la carpeta Results.")
+    
+    return file_path
+
+def open_file(file_path):
+    if os.path.exists(file_path):
+        # Intentar abrir la carpeta con el explorador de archivos
+        if os.name == 'nt':  # Para sistemas Windows
+            subprocess.run(['explorer', file_path])
+        elif os.name == 'posix':  # Para sistemas Unix/Linux/Mac
+            subprocess.run(['open', file_path])
+        actualizar_log(f"Carpeta con resultados abierta: {file_path}")
+    else:
+        actualizar_log("La carpeta de resultados no existe.")

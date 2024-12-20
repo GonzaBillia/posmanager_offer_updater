@@ -64,8 +64,8 @@ def on_closing():
 root.protocol("WM_DELETE_WINDOW", on_closing)
 
 # Crear los inputs y los botones desde los módulos correspondientes
-entry_archivo2, entry_propuesta, entry_codebars = crear_inputs(root)
-button_procesar = crear_botones(root, entry_archivo2, entry_propuesta, entry_codebars, db_connection_thread)
+entry_archivo2, entry_propuesta = crear_inputs(root)
+button_procesar = crear_botones(root, entry_archivo2, entry_propuesta)
 
 # CONFIGURACION INICIAL DE DB Y ELEMENTOS UI
 
