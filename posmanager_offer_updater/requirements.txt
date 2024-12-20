@@ -1,5 +1,6 @@
 altgraph==0.17.4
 auto-py-to-exe==2.45.0
+babel==2.16.0
 bottle==0.13.2
 bottle-websocket==0.2.9
 certifi==2024.12.14
@@ -26,6 +27,7 @@ pywin32-ctypes==0.2.3
 requests==2.32.3
 setuptools==75.6.0
 six==1.17.0
+tkcalendar==1.6.1
 typing_extensions==4.12.2
 tzdata==2024.2
 urllib3==2.2.3

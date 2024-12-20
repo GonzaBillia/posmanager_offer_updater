@@ -1,7 +1,11 @@
+Aquí tienes una actualización del **README** con la nueva estructura de carpetas y archivos, según los cambios que mencionaste:
+
+---
+
 # posmanager-offer-updater
 
 ## Version
-1.1.2
+1.2.1
 
 El proyecto **posmanager-offer-updater** es una herramienta que permite procesar y actualizar ofertas de productos de una manera automatizada, normalizando los datos y calculando precios de ofertas. La herramienta permite leer archivos de entrada (en formatos CSV y TXT), normalizar los datos y realizar uniones entre ellos para obtener la información final necesaria para las ofertas. Además, genera un archivo de salida con los datos procesados y sin cabeceras.
 
@@ -13,6 +17,11 @@ La estructura de carpetas y archivos del proyecto es la siguiente:
 posmanager-offer-updater
 ├── assets
 │   └── favicon.ico                # Icono de la aplicación
+├── config
+│   └── db_config.py               # Configuración para la conexión a la base de datos
+├── controllers
+│   ├── file_controller.py         # Lógica para manejar archivos y configuraciones
+│   └── query_controller.py        # Lógica para manejar consultas y procesamiento de datos
 ├── libs
 │   ├── offer_calculator
 │   │   ├── __init__.py            # Inicializa el módulo offer_calculator
@@ -23,7 +32,17 @@ posmanager-offer-updater
 │   └── codebar_selector
 │       ├── __init__.py            # Inicializa el módulo codebar_selector
 │       └── selector.py            # Procesa códigos de barras para mapear IDProducto a código interno
+├── output
+│   └── processed-files            # Carpeta donde se guardan los archivos de salida procesados
+├── queries
+│   ├── query_files.py             # Archivos con las consultas para obtener datos de la base de datos
+│   └── query_config.py            # Archivo para guardar la configuración de las consultas
+├── ui
+│   ├── inputs.py                 # Interfaz de usuario para la selección de archivos de entrada
+│   ├── buttons.py                # Definición de botones en la interfaz
+│   └── windows.py                # Ventanas y lógica asociada para la interfaz de usuario
 ├── main.py                        # Archivo principal que ejecuta el procesamiento de ofertas
+├── config.json                # Archivo de configuración en formato JSON
 ├── README.md                      # Este archivo
 ├── requirements.txt               # Lista de dependencias del proyecto
 └── .gitignore                     # Archivos y carpetas que no se deben incluir en el repositorio
@@ -31,11 +50,14 @@ posmanager-offer-updater
 
 ## Descripción
 
-El proyecto tiene tres módulos principales:
+El proyecto tiene varios módulos que realizan las siguientes funciones:
 
 1. **offer_calculator**: Se encarga de calcular el precio final de las ofertas, aplicando cualquier regla o fórmula de cálculo necesario.
 2. **update_normalizer**: Este módulo se encarga de normalizar los datos de los archivos de entrada, limpiando las columnas y asegurándose de que el formato de los datos sea consistente antes de realizar cualquier operación.
 3. **codebar_selector**: Permite procesar un archivo de códigos de barras y mapear los IDProducto del archivo de salida generado por `offer_calculator` con los códigos internos utilizados por POSManager.
+4. **controllers**: Aquí se encuentra la lógica para manejar archivos de entrada y salida, las consultas de la base de datos y la configuración asociada.
+5. **queries**: Contiene los archivos y configuraciones necesarios para realizar las consultas a la base de datos.
+6. **ui**: La interfaz de usuario donde los usuarios pueden seleccionar los archivos de entrada, visualizar el progreso y resultados, y ejecutar el procesamiento de datos.
 
 El archivo `main.py` es el punto de entrada de la aplicación, donde se leen los archivos de datos (en formatos CSV y TXT), se normalizan y procesan, y finalmente se guarda el archivo de salida con los datos actualizados y sin las cabeceras.
 
@@ -53,7 +75,7 @@ Para ejecutar este proyecto, asegúrate de tener instalados los siguientes requi
 Clona este repositorio en tu máquina local usando Git:
 
 ```bash
-git clone https://github.com/usuario/posmanager-offer-updater.git
+git clone https://github.com/GonzaBillia/posmanager-offer-updater.git
 ```
 
 ### 2. Crear un entorno virtual (opcional pero recomendado)
@@ -103,11 +125,15 @@ Ejecuta el archivo `main.py` para procesar los archivos de entrada y generar el 
 python main.py
 ```
 
-El script leerá los archivos de entrada, realizará las operaciones necesarias (como normalización, cálculo de precios y selección de códigos de barras) y generará un archivo de salida con los datos procesados. El archivo de salida se guardará en la carpeta `processed-files` con un nombre como `query-{fecha de hoy}.txt`.
+El script leerá los archivos de entrada, realizará las operaciones necesarias (como normalización, cálculo de precios y selección de códigos de barras) y generará un archivo de salida con los datos procesados. El archivo de salida se guardará en la carpeta `output/processed-files` con un nombre como `query-{fecha de hoy}.txt`.
 
 ### 3. Personalizar los archivos de entrada
 
-Si necesitas personalizar los archivos de entrada, puedes ajustar las configuraciones dentro de los módulos `offer_calculator/calculator.py`, `update_normalizer/normalizer.py`, y `codebar_selector/selector.py`, que contienen la lógica de procesamiento de los datos.
+Si necesitas personalizar los archivos de entrada, puedes ajustar las configuraciones dentro de los módulos `libs/offer_calculator/calculator.py`, `libs/update_normalizer/normalizer.py`, y `libs/codebar_selector/selector.py`, que contienen la lógica de procesamiento de los datos.
+
+### 4. Personalizar las consultas
+
+Si deseas personalizar las consultas realizadas a la base de datos, puedes editar los archivos en la carpeta `queries/`.
 
 ## Requerimientos
 
@@ -128,3 +154,5 @@ Si deseas contribuir al proyecto, por favor sigue estos pasos:
 3. Realiza tus cambios y haz un commit (`git commit -am 'Añadir nueva característica'`).
 4. Empuja tus cambios a tu repositorio remoto (`git push origin nueva-caracteristica`).
 5. Crea un Pull Request en GitHub.
+
+---
