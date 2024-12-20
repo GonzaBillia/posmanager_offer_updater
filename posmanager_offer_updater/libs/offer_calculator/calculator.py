@@ -18,8 +18,8 @@ def normalizar_texto(texto):
     return texto
 
 def calcular_ofertas(output_file, archivo_propuesta):
+
     try:
-       
         # Cargar archivos Excel con manejo de errores
         try:
             items_df = pd.read_csv(output_file)

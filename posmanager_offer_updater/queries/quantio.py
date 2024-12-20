@@ -15,8 +15,8 @@ Q_PRODUCTS = """
         CONCAT ( productos.Producto,' ', productos.Presentacion) AS 'Nom Reducido',
         productos.idItem,
         productos.idTipoIVA,
-        subrubros.idCategoria,
-        productos.IDSubRubro,
+        IFNULL(subrubros.idCategoria, 0) AS idCategoria,
+        IFNULL(productos.IDSubRubro, 0) AS IDSubRubro,
         0 AS 'Codigo_de_Envase_asociado',
         0 AS 'Porc_de_Impuesto_Interno',
 
@@ -75,7 +75,7 @@ Q_PRODUCTS = """
         '-1' AS 'Costo _el_articulo',
         productos.idProveedor,
         productos.IDRubro,
-        productos.idMarca,
+        IFNULL(productos.idMarca, 0) AS idMarca,  -- IFNULL en idMarca
         '01/12/2024' AS 'Fecha Inicio',
         '31/12/2024' AS 'Fecha Fin'
 
@@ -91,14 +91,16 @@ Q_PRODUCTS = """
 """
 
 Q_BARCODES = """
-    SELECT productoscodebars.IDProducto AS IDProducto, productoscodebars.codebar AS Codebar
+    SELECT productoscodebars.IDProducto AS IDProducto, 
+           IFNULL(productoscodebars.codebar, '0') AS Codebar  -- IFNULL en Codebar
     FROM productoscodebars 
     LEFT JOIN productos
     ON productos.IDProducto = productoscodebars.IDProducto
     WHERE productos.Activo = 's' 
     UNION ALL
 
-    SELECT productos.IDProducto AS IDProducto, productos.Codebar AS Codebar
+    SELECT productos.IDProducto AS IDProducto, 
+           IFNULL(productos.Codebar, '0') AS Codebar
     FROM productos
     WHERE productos.Activo = 's' 
 """
