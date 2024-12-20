@@ -1,7 +1,3 @@
-Aquí tienes una actualización del **README** con la nueva estructura de carpetas y archivos, según los cambios que mencionaste:
-
----
-
 # posmanager-offer-updater
 
 ## Version
