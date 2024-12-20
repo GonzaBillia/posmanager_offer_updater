@@ -124,7 +124,7 @@ def procesar_archivos(file_path1, file_path2):
     # OUTPUT
 
      # Carpeta de salida
-    output_dir = os.path.expanduser('~\\Documents\\PM-offer-updater\\processed-files')
+    output_dir = os.path.expanduser('~\\Documents\\PM-offer-updater\\processed-files\\Items')
 
     # Verificar si la carpeta existe, si no, crearla
     if not os.path.exists(output_dir):

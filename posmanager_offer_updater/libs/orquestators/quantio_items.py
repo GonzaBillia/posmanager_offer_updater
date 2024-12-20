@@ -4,8 +4,8 @@ from ui.logs import get_logger
 
 actualizar_log = get_logger()
 
-file_path = "processed-files"
-name = "items"
+file_path = "raw\\quantio\\items"
+name = "raw-items"
 
 def process_file(day_filter):
     try:

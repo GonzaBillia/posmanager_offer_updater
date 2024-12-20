@@ -7,6 +7,7 @@ from libs.orquestators.quantio_items import process_file
 from libs.update_normalizer import procesar_archivos
 from libs.offer_calculator import calcular_ofertas
 from libs.barcode_selector import seleccionar_barcodes
+from controllers.file_controller import save_processed_files
 
 # Obtener la función para actualizar logs
 actualizar_log = get_logger()
@@ -31,7 +32,7 @@ def procesar(entry_archivo2, entry_propuesta, entry_codebars):
         codebars_file = seleccionar_barcodes(output_file, file_codebars)
         
         if items_file and codebars_file:
-            messagebox.showinfo("Éxito", f"El archivo de resultados y los codigos de barra han sido guardados exitosamente")
+            save_processed_files()
             actualizar_log("Proceso completado")
 
     except ValueError as e:
@@ -48,21 +49,6 @@ def crear_botones(root, entry_archivo2, entry_propuesta, entry_codebars, db_conn
     )
     button_procesar.grid(row=4, column=0, columnspan=1, pady=20, padx=10)
 
-    # Botón para recargar la configuración y probar la conexión
-    reload_button = ttk.Button(
-        root, 
-        text="Recargar", 
-        command=db_connection_thread  # Asignar la función recargada
-    )
-    reload_button.grid(row=4, column=1, pady=20, padx=10)
+    return button_procesar
 
-    return button_procesar, reload_button
-
-# Función para desactivar el botón de recarga
-def desactivar_boton_recarga(reload_button):
-    reload_button.config(state=tk.DISABLED)  # Desactivar el botón
-
-# Función para activar el botón de recarga
-def activar_boton_recarga(reload_button):
-    reload_button.config(state=tk.NORMAL)  # Reactivar el botón
 

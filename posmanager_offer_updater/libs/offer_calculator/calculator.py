@@ -1,6 +1,8 @@
 import pandas as pd
+import os
+from datetime import datetime
 import tkinter as tk
-from tkinter import filedialog, messagebox
+from tkinter import messagebox
 from ui.logs import get_logger
 import unicodedata
 
@@ -91,22 +93,30 @@ def calcular_ofertas(output_file, archivo_propuesta):
         # Rellenar valores NaN con 0 (opcional)
         items_df.iloc[:, [8, 22, 23, 24]] = items_df.iloc[:, [8, 22, 23, 24]].fillna(0)
 
-        # Exportar archivo actualizado como TXT Unicode
-        ruta_guardado = filedialog.asksaveasfilename(
-            title="Guardar archivo Items actualizado",
-            defaultextension=".txt",
-            filetypes=[("Archivos de Texto", "*.txt")]
-        )
 
-        if ruta_guardado:
-            items_df.to_csv(ruta_guardado, index=False, header=False, sep='\t', encoding='utf-16', float_format="%.2f")  # Especificar formato decimal
-            actualizar_log(f"archivo guardado correctamente")
-            actualizar_log("---------- Proceso de calculo de oferta Terminado ----------")
-            return True
-        else:
-            messagebox.showwarning("Cancelado", "La exportación fue cancelada.")
-            actualizar_log("La exportación fue cancelada.")
-            return False
+
+        # Exportar archivo actualizado como TXT Unicode
+        # Definir la ruta del directorio de salida
+        output_dir = os.path.expanduser('~\\Documents\\PM-offer-updater\\processed-files\\calculated-items')
+
+        # Verificar si la carpeta existe, si no, crearla
+        if not os.path.exists(output_dir):
+            os.makedirs(output_dir)
+
+        # Obtener la fecha de hoy
+        fecha_hoy = datetime.today().strftime('%Y-%m-%d')
+
+        # Crear el nombre de archivo con la fecha de hoy
+        output_file = os.path.join(output_dir, f"calc-items-{fecha_hoy}.txt")
+
+        # Guardar el resultado en el archivo
+        items_df.to_csv(output_file, index=False, header=False, sep='\t', encoding='utf-16', float_format="%.2f")
+
+        # Registrar la acción
+        actualizar_log(f"Archivo guardado correctamente en: {output_file}")
+        actualizar_log("---------- Proceso de cálculo de oferta Terminado ----------")
+
+        return True
     except Exception as e:
         messagebox.showerror("Error", f"Ocurrió un error: {e}")
         actualizar_log(f"Error {e}")

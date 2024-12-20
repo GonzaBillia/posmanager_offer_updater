@@ -48,7 +48,7 @@ def seleccionar_barcodes(output_file, barcode_query):
         # OUTPUT
 
         # Carpeta de salida
-        output_dir = os.path.expanduser('~\\Documents\\PM-offer-updater\\codebars')
+        output_dir = os.path.expanduser('~\\Documents\\PM-offer-updater\\processed-files\\Codebars')
 
         # Verificar si la carpeta existe, si no, crearla
         if not os.path.exists(output_dir):

@@ -1,4 +1,6 @@
 import os
+import datetime
+import shutil
 import json
 import csv
 from datetime import datetime
@@ -90,3 +92,38 @@ def read_query_config():
     except Exception as e:
         actualizar_log(f"Error al leer el archivo de configuración: {str(e)}")
         return None
+    
+def save_processed_files():
+    # Definir la fecha de hoy
+    fecha_hoy = datetime.today().strftime('%Y-%m-%d')
+
+    # Definir las rutas de los directorios de origen
+    output_dir_codebars = os.path.expanduser('~\\Documents\\PM-offer-updater\\processed-files\\Codebars')
+    output_dir_items = os.path.expanduser('~\\Documents\\PM-offer-updater\\processed-files\\calculated-items')
+
+    # Definir la ruta de destino en Results
+    output_dir_results = os.path.expanduser(f'~\\Documents\\PM-offer-updater\\processed-files\\Results\\{fecha_hoy}')
+
+    # Crear la carpeta Results si no existe
+    if not os.path.exists(output_dir_results):
+        os.makedirs(output_dir_results)
+
+    # Función para buscar y copiar el archivo a la carpeta de destino
+    def copiar_archivo(archivo_origen, destino, nuevo_nombre):
+        if os.path.exists(archivo_origen):
+            # Copiar archivo al destino con el nuevo nombre
+            shutil.copy(archivo_origen, os.path.join(destino, nuevo_nombre))
+            actualizar_log(f"Archivo copiado: {nuevo_nombre} a {destino}")
+        else:
+            actualizar_log(f"Archivo no encontrado: {archivo_origen}")
+
+    # Buscar y copiar el archivo `Items`
+    items_file = os.path.join(output_dir_items, f"calc-items-{fecha_hoy}.txt")  # O el nombre real del archivo
+    copiar_archivo(items_file, output_dir_results, "Items.txt")
+
+    # Buscar y copiar el archivo `Codebars`
+    codebars_file = os.path.join(output_dir_codebars, f"CodBarras-{fecha_hoy}.txt")  # O el nombre real del archivo
+    copiar_archivo(codebars_file, output_dir_results, "CodBarras.txt")
+
+    # Registro de la acción final
+    actualizar_log("Archivos copiados correctamente a la carpeta Results.")
