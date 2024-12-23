@@ -3,6 +3,7 @@ import os
 import threading
 from tkinter import messagebox
 from ui.logs import configurar_logger, get_logger
+from controllers.file_controller import get_resource_path
 
 # CONFIGURACION INICIAL DE LA VENTANA
 

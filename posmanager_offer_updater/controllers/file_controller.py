@@ -1,4 +1,5 @@
 import os
+import sys
 import subprocess
 import datetime
 import shutil
@@ -142,3 +143,13 @@ def open_file(file_path):
         actualizar_log(f"Carpeta con resultados abierta: {file_path}")
     else:
         actualizar_log("La carpeta de resultados no existe.")
+
+def get_resource_path(relative_path):
+    """Obtiene la ruta absoluta del archivo, ya sea en desarrollo o en un .exe."""
+    if hasattr(sys, '_MEIPASS'):
+        # Si se está ejecutando desde un .exe, usa el directorio temporal.
+        base_path = sys._MEIPASS
+    else:
+        # En desarrollo, usa el directorio del script.
+        base_path = os.path.abspath(".")
+    return os.path.join(base_path, relative_path)
