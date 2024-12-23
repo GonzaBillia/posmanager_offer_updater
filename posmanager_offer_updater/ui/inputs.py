@@ -36,8 +36,8 @@ def crear_inputs(root):
     label_archivo1 = ttk.Label(root, text="Items actualizados recientemente (Consulta a la base de datos):")
     label_archivo1.grid(row=0, column=0, padx=10, pady=10)
 
-    label2_archivo1 = ttk.Label(root, text=f"Cantidad de dias contemplados: {config['dias']}")
-    label2_archivo1.grid(row=0, column=1, padx=10, pady=10)
+    # label2_archivo1 = ttk.Label(root, text=f"Cantidad de dias contemplados: {config['dias']}")
+    # label2_archivo1.grid(row=0, column=1, padx=10, pady=10)
 
     button_query = ttk.Button(root, text="Filtro", command=lambda: ventana_query_quantio(root))
     button_query.grid(row=0, column=2, padx=10, pady=10)

@@ -25,24 +25,32 @@ def configurar_logger(root):
     """
     global log_area, actualizar_log
 
-    # Crear el área de logs
-    log_area = tk.Text(root, height=10, width=100, wrap=tk.WORD, state=tk.DISABLED)
-    log_area.grid(row=5, column=0, columnspan=3, pady=10)
+    try:
+        # Crear el área de logs
+        log_area = tk.Text(root, height=10, width=100, wrap=tk.WORD, state=tk.DISABLED)
+        log_area.grid(row=5, column=0, columnspan=3, pady=10)
 
-    # Definir la función para actualizar los logs
-    def log(message):
-        try:
-            log_area.config(state=tk.NORMAL)
-            log_area.insert(tk.END, message + '\n')
-            log_area.yview(tk.END)
-            log_area.config(state=tk.DISABLED)
-            root.update()
-        except:
-            tk.TclError
-            pass
+        # Definir la función para actualizar los logs
+        def log(message):
+            try:
+                log_area.config(state=tk.NORMAL)
+                log_area.insert(tk.END, message + '\n')
+                log_area.yview(tk.END)
+                log_area.config(state=tk.DISABLED)
+                root.update()
+            except tk.TclError:
+                pass
 
-    # Asignar la función al logger global
-    actualizar_log = log
+        # Asignar la función al logger global
+        actualizar_log = log
+
+        # Mensaje de éxito para depuración
+        print("Logger configurado correctamente")
+
+    except Exception as e:
+        print(f"Error configurando el logger: {e}")
+        actualizar_log = None
+
 
 def get_logger():
     """

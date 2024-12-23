@@ -3,7 +3,6 @@ import os
 import threading
 from tkinter import messagebox
 from ui.logs import configurar_logger, get_logger
-from controllers.file_controller import get_resource_path
 
 # CONFIGURACION INICIAL DE LA VENTANA
 
@@ -11,9 +10,14 @@ from controllers.file_controller import get_resource_path
 root = tk.Tk()
 root.title("Procesamiento de Archivos para POSManager")
 
-# Configurar el logger global y Obtener la función para actualizar logs
-configurar_logger(root)
-actualizar_log = get_logger()
+# Configurar el logger global y obtener la función para actualizar logs
+try:
+    configurar_logger(root)
+    actualizar_log = get_logger()
+except RuntimeError as e:
+    print(f"Error: {e}")
+    actualizar_log = print  # Reemplazo temporal para evitar fallos críticos
+
 
 # CONFIGURACION INICIAL DE LA VENTANA
 
@@ -25,12 +29,10 @@ actualizar_log = get_logger()
 from ui.inputs import crear_inputs
 from ui.buttons import crear_botones
 from config.db_config import DBConfig
-
-# Obtener el directorio del script actual (donde está main.py)
-current_dir = os.path.dirname(os.path.abspath(__file__))
+from controllers.file_controller import get_resource_path
 
 # Ruta completa al archivo config.json
-config_path = os.path.join(current_dir, 'config.json')
+config_path = get_resource_path('config.json')
 
 # Crear la instancia de DBConfig usando la ruta correcta
 db_config = DBConfig(config_path)
@@ -40,9 +42,12 @@ conexion_en_proceso = False
 
 # Función para intentar conectar a la base de datos
 def connect_to_db():
-    connection = db_config.create_connection()
-    if connection:
-        connection.close()
+    try:
+        connection = db_config.create_connection()
+        if connection:
+            connection.close()
+    except:
+        print('No se pudo conectar a la base de datos al iniciar')
 
 
 # Función para manejar la conexión en un hilo separado

@@ -1,4 +1,4 @@
-import mysql.connector
+import pymysql
 import os
 from ui.logs import get_logger
 from config.db_config import DBConfig
@@ -20,10 +20,10 @@ def quantio_updated_products(day_filter):
         connection = db_config.create_connection()  # Establece la conexión
         
         if connection:
-            cursor = connection.cursor(dictionary=True)
+            cursor = connection.cursor()
             actualizar_log("Cursor abierto para realizar consulta")
 
-             # Ejecutar las sentencias SET sin usar multi=True
+            # Ejecutar las sentencias SET sin usar multi=True
             cursor.execute(cod1)  # Ejecuta la primera sentencia SET
             cursor.execute(cod2)  # Ejecuta la segunda sentencia SET
             
@@ -31,8 +31,8 @@ def quantio_updated_products(day_filter):
             cursor.execute(Q_PRODUCTS, {"day_filter": day_filter})
 
             # Verificar si la consulta principal devuelve resultados
-            if cursor.with_rows:  # Esta propiedad es True si hay un conjunto de resultados
-                resultados = cursor.fetchall()
+            resultados = cursor.fetchall()
+            if resultados:  # Si hay resultados
                 actualizar_log("Consulta realizada correctamente")
                 return resultados
             else:
@@ -42,7 +42,7 @@ def quantio_updated_products(day_filter):
             actualizar_log("No se pudo establecer la conexión a la base de datos.")
             return []
         
-    except mysql.connector.Error as e:
+    except pymysql.MySQLError as e:
         actualizar_log(f"Error ejecutando la consulta: {e}")
         return []
     
@@ -69,15 +69,15 @@ def quantio_updated_barcodes():
         connection = db_config.create_connection()  # Establece la conexión
         
         if connection:
-            cursor = connection.cursor(dictionary=True)
-            actualizar_log("Realizando consulta de codigos de barra a la base de datos")
+            cursor = connection.cursor()
+            actualizar_log("Realizando consulta de códigos de barra a la base de datos")
             
-            # Ejecutar la consulta SELECT con el parámetro day_filter
+            # Ejecutar la consulta SELECT
             cursor.execute(Q_BARCODES)
 
             # Verificar si la consulta principal devuelve resultados
-            if cursor.with_rows:  # Esta propiedad es True si hay un conjunto de resultados
-                resultados = cursor.fetchall()
+            resultados = cursor.fetchall()
+            if resultados:  # Si hay resultados
                 actualizar_log("Consulta realizada correctamente")
                 return resultados
             else:
@@ -87,7 +87,7 @@ def quantio_updated_barcodes():
             actualizar_log("No se pudo establecer la conexión a la base de datos.")
             return []
         
-    except mysql.connector.Error as e:
+    except pymysql.MySQLError as e:
         actualizar_log(f"Error ejecutando la consulta: {e}")
         return []
     
