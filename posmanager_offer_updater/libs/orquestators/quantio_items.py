@@ -7,9 +7,9 @@ actualizar_log = get_logger()
 file_path = "raw\\quantio\\items"
 name = "Items"
 
-def process_file(day_filter):
+def process_file(day_filter, timestamp, is_timestamp):
     try:
-        data = quantio_updated_products(day_filter)
+        data = quantio_updated_products(day_filter, timestamp, is_timestamp)
         output_file = guardar_resultados_como_csv(data, file_path, name)
         actualizar_log("El archivo Items Quantio se proceso correctamente")
         return output_file

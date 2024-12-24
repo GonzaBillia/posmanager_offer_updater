@@ -66,6 +66,10 @@ def save_query_config(data):
     # Nombre del archivo de configuración
     archivo_configuracion = os.path.join(output_dir, "config_query_filters.json")
 
+    # Asegurarse de que los datos son válidos para JSON
+    if not isinstance(data, dict):
+        raise ValueError("Los datos a guardar deben ser un diccionario válido.")
+    
     # Guardar la configuración en el archivo
     with open(archivo_configuracion, 'w') as json_file:
         json.dump(data, json_file, indent=4)
@@ -94,6 +98,26 @@ def read_query_config():
     except Exception as e:
         actualizar_log(f"Error al leer el archivo de configuración: {str(e)}")
         return None
+    
+def update_config_query(key, value):
+    """
+    Actualiza un campo específico en el archivo de configuración JSON.
+
+    Parámetros:
+        key: La clave del campo que se desea actualizar.
+        value: El nuevo valor para el campo especificado.
+    """
+    # Leer la configuración actual
+    configuracion = read_query_config()
+
+    # Actualizar el campo especificado
+    configuracion[key] = value
+
+    # Guardar los cambios
+    save_query_config(configuracion)
+
+    # Log de la operación
+    actualizar_log(f"Configuración actualizada: {key} = {value}")
     
 def save_processed_files():
     # Definir la fecha de hoy

@@ -2,11 +2,11 @@ import pymysql
 import os
 from ui.logs import get_logger
 from config.db_config import DBConfig
-from queries.quantio import cod1, cod2, Q_PRODUCTS, Q_BARCODES
+from queries.quantio import cod1, cod2, Q_PRODUCTS, Q_BARCODES, Q_UPDATED_PRODUCTS
 
 actualizar_log = get_logger()
 
-def quantio_updated_products(day_filter):
+def quantio_updated_products(day_filter, timestamp, is_timestamp):
     connection = None
     cursor = None
     try:
@@ -27,8 +27,11 @@ def quantio_updated_products(day_filter):
             cursor.execute(cod1)  # Ejecuta la primera sentencia SET
             cursor.execute(cod2)  # Ejecuta la segunda sentencia SET
             
-            # Ejecutar la consulta SELECT con el parámetro day_filter
-            cursor.execute(Q_PRODUCTS, {"day_filter": day_filter})
+            if is_timestamp and timestamp != None:
+                cursor.execute(Q_UPDATED_PRODUCTS, {"day_filter": timestamp})
+            else:
+                # Ejecutar la consulta SELECT con el parámetro day_filter
+                cursor.execute(Q_UPDATED_PRODUCTS, {"day_filter": day_filter})
 
             # Verificar si la consulta principal devuelve resultados
             resultados = cursor.fetchall()
