@@ -15,7 +15,8 @@ if config is None:  # Si `config` no tiene datos, inicializa como un diccionario
 def ventana_query_quantio(root):
 
     # Variable de control para el Checkbutton
-    timestamp_var = tk.BooleanVar(value=False)  # Inicialmente False
+    timestamp_var = tk.BooleanVar(value=True)  # Inicialmente False
+    optimize_var = tk.BooleanVar(value=False)
 
     def save_config():
         global config
@@ -24,11 +25,13 @@ def ventana_query_quantio(root):
 
         # Obtener el estado del Checkbutton
         usar_ultima_fecha = timestamp_var.get()
+        usar_optimizar_etiqueta = optimize_var.get()
 
         # Crear el diccionario de configuración
         nueva_configuracion  = {
             'dias': fecha_seleccionada,
-            'usar_timestamp': usar_ultima_fecha
+            'usar_timestamp': usar_ultima_fecha,
+            'optimizar_etiquetas': usar_optimizar_etiqueta
         }
 
 
@@ -61,6 +64,9 @@ def ventana_query_quantio(root):
     frame_timestamp = Frame(ventana_query_quantio)
     frame_timestamp.pack(side="top", fill="both")
 
+    frame_optimize = Frame(ventana_query_quantio)
+    frame_optimize.pack(side="top", fill="both")
+
 
 
     # Etiqueta en la ventana secundaria
@@ -78,6 +84,10 @@ def ventana_query_quantio(root):
     timestamp_text = f"Usar ultima fecha de modificacion - {config.get('timestamp', 'N/A')}"
     timestamp = tk.Checkbutton(frame_timestamp, text=timestamp_text, variable=timestamp_var, indicatoron=True)    
     timestamp.pack(side='left', pady=10, padx=10)
+
+    optimize_text = "Optimizar para etiquetas (filtra solo por cambio de precio)"
+    optimize = tk.Checkbutton(frame_optimize, text=optimize_text, variable=optimize_var)
+    optimize.pack(side='left', pady=10, padx=10)
 
     guardar_button = ttk.Button(frame_buttons, text="Guardar", command=lambda: save_config())
     guardar_button.pack(side="right", pady=10, padx=10)

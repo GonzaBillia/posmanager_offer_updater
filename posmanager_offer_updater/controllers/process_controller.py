@@ -27,11 +27,20 @@ def process(file_path2, file_propuesta):
     fecha_actual = datetime.strftime(fecha_actual, '%Y-%m-%d %H-%M-%S')
 
     # Inicializar el valor de 'timestamp' si no existe
-    timestamp_actual = config.get('timestamp', None) 
+    if 'optimizar_etiquetas' not in config:
+        config['optimizar_etiquetas'] = False
+
+    if 'usar_timestamp' not in config:
+        config['usar_timestamp'] = False
+        
+    timestamp_actual = config.get('timestamp', None)
 
     try:
-        query_file_items = process_items(config['dias'], timestamp_actual, config['usar_timestamp'])
+        query_file_items = process_items(config['dias'], timestamp_actual, config['usar_timestamp'], config['optimizar_etiquetas'])
+
         update_config_query('timestamp', fecha_actual)
+        update_config_query('optimizar_etiquetas', True)
+
         output_file = procesar_archivos(query_file_items, file_path2)
         items_file = calcular_ofertas(output_file, file_propuesta)
         query_file_barcodes = process_barcodes()

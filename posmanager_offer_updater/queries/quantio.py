@@ -173,10 +173,18 @@ Q_UPDATED_PRODUCTS = """
         LEFT JOIN Subrubros
         ON productos.IDSubRubro = subrubros.IDSubRubro
 
-    WHERE productos.Activo = 's'
-    AND productos.FechaModificacion >= %(day_filter)s
-    AND productos.idTipoIVA != 1
-    GROUP BY codigoInterno;
+    WHERE 
+        productos.Activo = 's'
+        AND productos.idTipoIVA != 1
+        AND (
+            (%(optimize_labels)s = 1 
+                AND DATE(productos.FechaUltimoPrecio) >= DATE(%(day_filter)s) 
+                AND productos.FechaModificacion >= %(day_filter)s)
+            OR (%(optimize_labels)s = 0 
+                AND productos.FechaModificacion >= %(day_filter)s)
+        )
+    GROUP BY 
+        codigoInterno;
 """
 
 Q_BARCODES = """
