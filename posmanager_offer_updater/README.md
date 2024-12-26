@@ -1,7 +1,7 @@
 # posmanager-offer-updater
 
 ## Version
-1.2.3
+1.2.4
 
 El proyecto **posmanager-offer-updater** es una herramienta que permite procesar y actualizar ofertas de productos de una manera automatizada, normalizando los datos y calculando precios de ofertas. La herramienta permite leer archivos de entrada (en formatos CSV y TXT), normalizar los datos y realizar uniones entre ellos para obtener la información final necesaria para las ofertas. Además, genera un archivo de salida con los datos procesados y sin cabeceras.
 
