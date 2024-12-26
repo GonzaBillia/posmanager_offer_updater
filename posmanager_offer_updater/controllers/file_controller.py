@@ -119,7 +119,7 @@ def update_config_query(key, value):
     # Log de la operación
     actualizar_log(f"Configuración actualizada: {key} = {value}")
     
-def save_processed_files():
+def save_processed_files(isOpt):
     # Definir la fecha de hoy
     fecha_hoy = datetime.today().strftime('%Y-%m-%d')
 
@@ -143,13 +143,18 @@ def save_processed_files():
         else:
             actualizar_log(f"Archivo no encontrado: {archivo_origen}")
 
-    # Buscar y copiar el archivo `Items`
-    items_file = os.path.join(output_dir_items, f"calc-items-{fecha_hoy}.txt")  # O el nombre real del archivo
-    copiar_archivo(items_file, file_path, "Items.txt")
+    if isOpt:
+        # Buscar y copiar el archivo `Items`
+        items_file = os.path.join(output_dir_items, f"calc-items-{fecha_hoy}.txt")  # O el nombre real del archivo
+        copiar_archivo(items_file, file_path, "Items-opt.txt")
+    else:
+        # Buscar y copiar el archivo `Items`
+        items_file = os.path.join(output_dir_items, f"calc-items-{fecha_hoy}.txt")  # O el nombre real del archivo
+        copiar_archivo(items_file, file_path, "Items.txt")
 
-    # Buscar y copiar el archivo `Codebars`
-    codebars_file = os.path.join(output_dir_codebars, f"CodBarras-{fecha_hoy}.txt")  # O el nombre real del archivo
-    copiar_archivo(codebars_file, file_path, "CodBarras.txt")
+        # Buscar y copiar el archivo `Codebars`
+        codebars_file = os.path.join(output_dir_codebars, f"CodBarras-{fecha_hoy}.txt")  # O el nombre real del archivo
+        copiar_archivo(codebars_file, file_path, "CodBarras.txt")
 
 
     # Registro de la acción final

@@ -36,20 +36,32 @@ def process(file_path2, file_propuesta):
     timestamp_actual = config.get('timestamp', None)
 
     try:
-        query_file_items = process_items(config['dias'], timestamp_actual, config['usar_timestamp'], config['optimizar_etiquetas'])
+        query_file_items = process_items(config['dias'], timestamp_actual, config['usar_timestamp'], False)
+
+        query_file_items_opt = None
+
 
         update_config_query('timestamp', fecha_actual)
-        update_config_query('optimizar_etiquetas', True)
 
         output_file = procesar_archivos(query_file_items, file_path2)
         items_file = calcular_ofertas(output_file, file_propuesta)
         query_file_barcodes = process_barcodes()
         codebars_file = seleccionar_barcodes(output_file, query_file_barcodes)
-        
+
         if items_file and codebars_file:
-            res = save_processed_files()
+            res = save_processed_files(False)
             actualizar_log("Proceso completado")
-            open_file(res)
+        
+        if config['optimizar_etiquetas'] == True:
+            query_file_items_opt = process_items(config['dias'], timestamp_actual, config['usar_timestamp'], config['optimizar_etiquetas'])
+            output_file_opt = procesar_archivos(query_file_items_opt, file_path2)
+            items_file_opt = calcular_ofertas(output_file_opt, file_propuesta)
+
+            if items_file_opt:
+                res = save_processed_files(True)
+                actualizar_log("Proceso completado (optimizacion de etiquetas)")
+        
+        open_file(res)
 
     except ValueError as e:
         messagebox.showerror("Error", str(e))
