@@ -6,19 +6,9 @@ from queries.quantio import cod1, cod2, Q_BARCODES, Q_UPDATED_PRODUCTS
 
 actualizar_log = get_logger()
 
-def quantio_updated_products(day_filter, timestamp, is_timestamp, optimize_labels):
-    connection = None
+def quantio_updated_products(day_filter, timestamp, is_timestamp, optimize_labels, connection):
     cursor = None
-    try:
-        # Obtener el directorio donde se encuentra el script actual (query_controller.py)
-        current_dir = os.path.dirname(os.path.abspath(__file__))
-
-        # Ruta completa al archivo config.json (supongamos que está en el directorio raíz o donde se llama)
-        config_path = os.path.join(current_dir, '..', 'config.json')
-        # Crear una nueva conexión a la base de datos
-        db_config = DBConfig(config_path)  # Asegúrate de poner la ruta correcta al archivo de configuración
-        connection = db_config.create_connection()  # Establece la conexión
-        
+    try:        
         if connection:
             cursor = connection.cursor()
             actualizar_log("Cursor abierto para realizar consulta")
@@ -59,23 +49,11 @@ def quantio_updated_products(day_filter, timestamp, is_timestamp, optimize_label
         if cursor:
             cursor.close()
             actualizar_log("Cursor cerrado después de la consulta.")
-        if connection:
-            connection.close()  # Cerrar la conexión
-            actualizar_log("Conexión cerrada.")
 
-def quantio_updated_barcodes():
-    connection = None
+def quantio_updated_barcodes(connection):
     cursor = None
     try:
-        # Obtener el directorio donde se encuentra el script actual (query_controller.py)
-        current_dir = os.path.dirname(os.path.abspath(__file__))
 
-        # Ruta completa al archivo config.json (supongamos que está en el directorio raíz o donde se llama)
-        config_path = os.path.join(current_dir, '..', 'config.json')
-        # Crear una nueva conexión a la base de datos
-        db_config = DBConfig(config_path)  # Asegúrate de poner la ruta correcta al archivo de configuración
-        connection = db_config.create_connection()  # Establece la conexión
-        
         if connection:
             cursor = connection.cursor()
             actualizar_log("Realizando consulta de códigos de barra a la base de datos")
@@ -103,6 +81,3 @@ def quantio_updated_barcodes():
         # Asegurarse de que el cursor y la conexión se cierren después de la consulta
         if cursor:
             cursor.close()
-        if connection:
-            connection.close()  # Cerrar la conexión
-            actualizar_log("Conexión cerrada.")

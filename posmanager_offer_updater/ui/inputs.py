@@ -4,7 +4,6 @@ from tkinter import ttk
 from tkinter import filedialog
 from ui.logs import get_logger
 from ui.windows import ventana_query_quantio, config
-from controllers.file_controller import read_query_config
 
 # Obtener la función para actualizar logs
 actualizar_log = get_logger()
