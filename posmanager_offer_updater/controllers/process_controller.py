@@ -15,13 +15,6 @@ from tkinter import messagebox
 # Obtener la función para actualizar logs
 actualizar_log = get_logger()
 
-# Obtener el directorio donde se encuentra el script actual (query_controller.py)
-current_dir = os.path.dirname(os.path.abspath(__file__))
-# Ruta completa al archivo config.json (supongamos que está en el directorio raíz o donde se llama)
-config_path = os.path.join(current_dir, '..', 'config.json')
-
-db_config = DBConfig(config_path)  # Asegúrate de poner la ruta correcta al archivo de configuración
-
 def process(file_path2, file_propuesta):
     if not file_path2 or not file_propuesta:
         messagebox.showwarning("Advertencia", "Por favor, seleccione todos los archivos antes de continuar.")
@@ -44,7 +37,7 @@ def process(file_path2, file_propuesta):
     timestamp_actual = config.get('timestamp', None)
 
     try:
-        connection = db_config.create_connection()
+        connection = DBConfig.create_connection()
 
         query_file_items = process_items(config['dias'], timestamp_actual, config['usar_timestamp'], False, connection)
 

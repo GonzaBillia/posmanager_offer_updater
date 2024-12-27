@@ -13,50 +13,22 @@ logging.basicConfig(level=logging.DEBUG)
 actualizar_log = get_logger()
 
 class DBConfig:
-    def __init__(self, config_path):
-        self.config_path = config_path
+    def __init__(self):
         self.config = None
         self.connection = None
         self.cursor = None
 
-    def load_config(self):
-        """Carga el archivo JSON con las credenciales de la base de datos."""
-        try:
-            if not os.path.exists(self.config_path):
-                raise FileNotFoundError(f"Archivo de configuración no encontrado: {self.config_path}")
-            
-            with open(self.config_path, "r") as file:
-                self.config = json.load(file)
-                # Validar las claves necesarias
-                required_keys = ["DB_HOST", "DB_USER", "DB_PASSWORD", "DB_DATABASE", "DB_PORT"]
-                for key in required_keys:
-                    if key not in self.config:
-                        raise KeyError(f"Falta la clave {key} en el archivo de configuración.")
-                actualizar_log("Archivo de configuración cargado correctamente.")
-        except FileNotFoundError as e:
-            messagebox.showerror("Error de configuración", f"No se encontró el archivo de configuración: {e}")
-            actualizar_log(f"Error de configuración: {e}")
-        except KeyError as e:
-            messagebox.showerror("Error de configuración", f"Clave faltante en el archivo de configuración: {e}")
-            actualizar_log(f"Clave faltante en el archivo de configuración: {e}")
-        except json.JSONDecodeError as e:
-            messagebox.showerror("Error de configuración", f"Error al leer el archivo JSON: {e}")
-            actualizar_log(f"Error al leer el archivo JSON: {e}")
-
     def create_connection(self):
         """Crea y devuelve una conexión a la base de datos MySQL usando el archivo de configuración."""
         try:
-            if self.config is None:
-                self.load_config()  # Cargar configuración si no está cargada
-
             actualizar_log('Procesando configuración de conexión.')
 
             self.connection = pymysql.connect(
-                host=self.config["DB_HOST"],
-                user=self.config["DB_USER"],
-                password=self.config["DB_PASSWORD"],
-                database=self.config["DB_DATABASE"],
-                port=int(self.config["DB_PORT"]),
+                host=os.getenv["DB_HOST"],
+                user=os.getenv["DB_USER"],
+                password=os.getenv["DB_PASSWORD"],
+                database=os.getenv["DB_DATABASE"],
+                port=int(os.getenv["DB_PORT"]),
                 cursorclass=pymysql.cursors.DictCursor,
                 charset='utf8'
             )
