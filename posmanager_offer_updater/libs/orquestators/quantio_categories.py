@@ -12,8 +12,8 @@ def process_categories_files(connection):
         output_file_provs = save_direct_file(data_provs, "Proveedores")
         output_file_dpts = save_direct_file(data_dpts, "Departamentos")
         output_file_fams = save_direct_file(data_fams, "Familias")
-        actualizar_log("El archivo Items Quantio se proceso correctamente")
+        actualizar_log("Los Archivos se procesaron correctamente")
         return output_file_dpts, output_file_fams, output_file_provs
     except Exception as e:
-        actualizar_log(f"Ocurrio un Error en el proceso de la consulta: {e}")
+        actualizar_log(f"Ocurrio un Error en el proceso de las consultas: {e}")
         raise e
