@@ -110,7 +110,7 @@ def calcular_ofertas(output_file, archivo_propuesta):
         output_file = os.path.join(output_dir, f"calc-items-{fecha_hoy}.txt")
 
         # Guardar el resultado en el archivo
-        items_df.to_csv(output_file, index=False, header=False, sep='\t', encoding='utf-16', float_format="%.2f")
+        items_df.to_csv(output_file, index=False, sep='\t', encoding='utf-16', float_format="%.2f")
 
         # Registrar la acción
         actualizar_log(f"Archivo guardado correctamente en: {output_file}")
