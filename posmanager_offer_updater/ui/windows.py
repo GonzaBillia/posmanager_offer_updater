@@ -17,6 +17,7 @@ def ventana_query_quantio(root):
     # Variable de control para el Checkbutton
     timestamp_var = tk.BooleanVar(value=True)  # Inicialmente False
     optimize_var = tk.BooleanVar(value=False)
+    categories_var = tk.BooleanVar(value=False)
 
     def save_config():
         global config
@@ -26,12 +27,14 @@ def ventana_query_quantio(root):
         # Obtener el estado del Checkbutton
         usar_ultima_fecha = timestamp_var.get()
         usar_optimizar_etiqueta = optimize_var.get()
+        usar_categorias = categories_var.get()
 
         # Crear el diccionario de configuración
         nueva_configuracion  = {
             'dias': fecha_seleccionada,
             'usar_timestamp': usar_ultima_fecha,
-            'optimizar_etiquetas': usar_optimizar_etiqueta
+            'optimizar_etiquetas': usar_optimizar_etiqueta,
+            'dpts_fams': usar_categorias
         }
 
 
@@ -67,6 +70,9 @@ def ventana_query_quantio(root):
     frame_optimize = Frame(ventana_query_quantio)
     frame_optimize.pack(side="top", fill="both")
 
+    frame_categories = Frame(ventana_query_quantio)
+    frame_categories.pack(side="top", fill="both")
+
 
 
     # Etiqueta en la ventana secundaria
@@ -88,6 +94,10 @@ def ventana_query_quantio(root):
     optimize_text = "Optimizar para etiquetas (filtra solo por cambio de precio)"
     optimize = tk.Checkbutton(frame_optimize, text=optimize_text, variable=optimize_var)
     optimize.pack(side='left', pady=10, padx=10)
+
+    categories_text = "Incluir Proveedores, Departamentos y Familias"
+    categories = tk.Checkbutton(frame_categories, text=categories_text, variable=categories_var)
+    categories.pack(side='left', pady=10, padx=10)
 
     guardar_button = ttk.Button(frame_buttons, text="Guardar", command=lambda: save_config())
     guardar_button.pack(side="right", pady=10, padx=10)

@@ -6,6 +6,7 @@ from config.db_config import DBConfig
 from controllers.file_controller import read_query_config
 from libs.orquestators.quantio_items import process_file as process_items
 from libs.orquestators.quantio_barcodes import process_file as process_barcodes
+from libs.orquestators.quantio_categories import process_categories_files as process_categories
 from libs.update_normalizer import procesar_archivos
 from libs.offer_calculator import calcular_ofertas
 from libs.barcode_selector import seleccionar_barcodes
@@ -33,6 +34,9 @@ def process(file_path2, file_propuesta):
 
     if 'usar_timestamp' not in config:
         config['usar_timestamp'] = False
+
+    if 'dpts_fams' not in config:
+        config['dpts_fams'] = False
         
     timestamp_actual = config.get('timestamp', None)
 
@@ -64,6 +68,10 @@ def process(file_path2, file_propuesta):
                 res = save_processed_files(True)
                 actualizar_log("Proceso completado (optimizacion de etiquetas)")
         
+        if config['dptos_fams'] == True:
+            process_categories(connection)
+            actualizar_log("Proceso completado (obtencion de categorias)")
+
         open_file(res)
 
     except ValueError as e:
