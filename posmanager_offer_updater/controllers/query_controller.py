@@ -23,8 +23,8 @@ def quantio_updated_products(day_filter, timestamp, is_timestamp, optimize_label
 
             # Ejecutar la consulta con los parámetros adecuados
             cursor.execute(
-                Q_UPDATED_PRODUCTS
-                
+                Q_UPDATED_PRODUCTS,
+                {'optimize_labels': optimize_labels_value}, {'day_filter': day_filter_value}
             )
             
             # Verificar si la consulta principal devuelve resultados
