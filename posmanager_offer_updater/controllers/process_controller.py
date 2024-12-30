@@ -72,7 +72,7 @@ def process(file_path2, file_propuesta):
                 res = save_processed_files(True)
                 actualizar_log("Proceso completado (optimizacion de etiquetas)")
         
-        if config['dptos_fams'] == True:
+        if config['dpts_fams'] == True:
             process_categories(connection)
             actualizar_log("Proceso completado (obtencion de categorias)")
 
