@@ -110,14 +110,62 @@ def calcular_ofertas(output_file, archivo_propuesta):
         output_file = os.path.join(output_dir, f"calc-items-{fecha_hoy}.txt")
 
         # Guardar el resultado en el archivo
-        items_df.to_csv(output_file, index=False, sep='\t', encoding='utf-16', float_format="%.2f")
+        items_df.to_csv(output_file, index=False, header=False, sep='\t', encoding='utf-16', float_format="%.2f")
 
         # Registrar la acción
         actualizar_log(f"Archivo guardado correctamente en: {output_file}")
         actualizar_log("---------- Proceso de cálculo de oferta Terminado ----------")
 
-        return True
+        return True, output_file
     except Exception as e:
         messagebox.showerror("Error", f"Ocurrió un error: {e}")
         actualizar_log(f"Error {e}")
+        return False
+
+def optimizar_lectoras(output_file):
+    try:
+        # Leer archivo
+        df = pd.read_csv(output_file, sep='\t', encoding='utf-16', header=None)
+
+        # Validar que el DataFrame no esté vacío
+        if df.empty:
+            raise ValueError("El archivo leído está vacío o no contiene datos válidos.")
+
+        # Verificar que las columnas necesarias existen
+        required_columns = [23, 22, 8]
+        if not all(col in df.columns for col in required_columns):
+            raise KeyError(f"Las columnas {required_columns} no se encuentran en el archivo.")
+
+        # Asegurar que las columnas sean tratadas como cadenas
+        df[23] = df[23].astype(str)
+        df[22] = df[22].astype(str)
+        df[8] = df[8].astype(str)
+
+        # Condición: filas donde precio_oferta != '0'
+        condition = df[23] != '0.0'
+
+        # Cambiar solo las filas que cumplen la condición, preservando valores originales en las demás
+        df[22] = df[22].where(~condition, df[8])  # Copiar precio_final a ultimo_precio solo si la condición es True
+        df[8] = df[8].where(~condition, df[23])  # Copiar precio_oferta a precio_final solo si la condición es True
+
+
+        # Crear directorio de salida si no existe
+        output_dir = os.path.expanduser('~\\Documents\\PM-offer-updater\\processed-files\\calculated-items')
+        os.makedirs(output_dir, exist_ok=True)
+
+        # Crear el nombre de archivo de salida
+        fecha_hoy = datetime.today().strftime('%Y-%m-%d')
+        output_path = os.path.join(output_dir, f"calc-items-opt-{fecha_hoy}.txt")
+
+        # Guardar el resultado en el archivo
+        df.to_csv(output_path, index=False, header=False, sep='\t', encoding='utf-16', float_format="%.2f")
+
+        # Registrar la acción
+        actualizar_log(f"Archivo guardado correctamente en: {output_path}")
+        actualizar_log("---------- Proceso de optimizacion de etiquetas Terminado ----------")
+
+        return True
+
+    except Exception as e:
+        actualizar_log(f"Error inesperado: {str(e)}")
         return False

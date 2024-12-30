@@ -7,7 +7,7 @@ from controllers.file_controller import read_query_config
 from libs.orquestators.quantio_items import process_file as process_items
 from libs.orquestators.quantio_barcodes import process_file as process_barcodes
 from libs.update_normalizer import procesar_archivos
-from libs.offer_calculator import calcular_ofertas
+from libs.offer_calculator import calcular_ofertas, optimizar_lectoras
 from libs.barcode_selector import seleccionar_barcodes
 from controllers.file_controller import save_processed_files, open_file, update_config_query
 from tkinter import messagebox
@@ -65,9 +65,13 @@ def process(file_path2, file_propuesta):
         if config['optimizar_etiquetas'] == True:
             query_file_items_opt = process_items(config['dias'], timestamp_actual, config['usar_timestamp'], config['optimizar_etiquetas'], connection)
             output_file_opt = procesar_archivos(query_file_items_opt, file_path2)
-            items_file_opt = calcular_ofertas(output_file_opt, file_propuesta)
+            is_Items, items_file_opt = calcular_ofertas(output_file_opt, file_propuesta)
 
-            if items_file_opt:
+            # Cambio de precios para lectoras:
+            is_opt = optimizar_lectoras(items_file_opt)
+
+
+            if is_Items and is_opt:
                 res = save_processed_files(True)
                 actualizar_log("Proceso completado (optimizacion de etiquetas)")
         

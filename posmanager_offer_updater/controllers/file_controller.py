@@ -145,7 +145,7 @@ def save_processed_files(isOpt):
 
     if isOpt:
         # Buscar y copiar el archivo `Items`
-        items_file = os.path.join(output_dir_items, f"calc-items-{fecha_hoy}.txt")  # O el nombre real del archivo
+        items_file = os.path.join(output_dir_items, f"calc-items-opt-{fecha_hoy}.txt")  # O el nombre real del archivo
         copiar_archivo(items_file, file_path, "Items-opt.txt")
     else:
         # Buscar y copiar el archivo `Items`
