@@ -54,6 +54,42 @@ def guardar_resultados_como_csv(results,final_path,name):
         actualizar_log(f"Error al guardar resultados en CSV: {e}")
         raise e
 
+def save_direct_file(data, name):
+    fecha_hoy = datetime.today().strftime('%Y-%m-%d')
+    if not data:
+        actualizar_log("No hay resultados para guardar.")
+        return
+
+    # Definir la ruta del directorio de salida (misma ruta que usas para otros archivos)
+    output_dir = os.path.expanduser(f'~\\Documents\\PM-offer-updater\\Results\\{fecha_hoy}')
+
+    # Verificar si la carpeta existe, si no, crearla
+    if not os.path.exists(output_dir):
+        os.makedirs(output_dir)
+        actualizar_log(f"Directorio creado: {output_dir}")
+
+    # Crear el nombre de archivo con la fecha de hoy
+    output_file = os.path.join(output_dir, f"{name}.txt")
+
+    # Obtener los encabezados del primer resultado
+    encabezados = data[0].keys()
+
+    try:
+        # Guardar los resultados en el archivo TXT
+        with open(output_file, mode='w', encoding='utf-8') as archivo_txt:
+            # Escribir encabezados
+            archivo_txt.write('\t'.join(encabezados) + '\n')  # Encabezados separados por tabulaciones
+            
+            # Escribir filas
+            for fila in data:
+                archivo_txt.write('\t'.join(str(fila[encabezado]) for encabezado in encabezados) + '\n')
+                actualizar_log(f"Resultados guardados exitosamente en {output_file}.")
+
+                return output_file
+    except Exception as e:
+        actualizar_log(f"Error al guardar resultados en TXT: {e}")
+        raise e
+
 def save_query_config(data):
     # Definir la ruta del directorio de salida
     output_dir = os.path.expanduser('~\\Documents\\PM-offer-updater\\config')

@@ -6,6 +6,7 @@ from config.db_config import DBConfig
 from controllers.file_controller import read_query_config
 from libs.orquestators.quantio_items import process_file as process_items
 from libs.orquestators.quantio_barcodes import process_file as process_barcodes
+from libs.orquestators.quantio_categories import process_categories_files as process_categories
 from libs.update_normalizer import procesar_archivos
 from libs.offer_calculator import calcular_ofertas, optimizar_lectoras
 from libs.barcode_selector import seleccionar_barcodes
@@ -14,13 +15,6 @@ from tkinter import messagebox
 
 # Obtener la función para actualizar logs
 actualizar_log = get_logger()
-
-# Obtener el directorio donde se encuentra el script actual (query_controller.py)
-current_dir = os.path.dirname(os.path.abspath(__file__))
-# Ruta completa al archivo config.json (supongamos que está en el directorio raíz o donde se llama)
-config_path = os.path.join(current_dir, '..', 'config.json')
-
-db_config = DBConfig(config_path)  # Asegúrate de poner la ruta correcta al archivo de configuración
 
 def process(file_path2, file_propuesta):
     if not file_path2 or not file_propuesta:
@@ -40,11 +34,14 @@ def process(file_path2, file_propuesta):
 
     if 'usar_timestamp' not in config:
         config['usar_timestamp'] = False
+
+    if 'dpts_fams' not in config:
+        config['dpts_fams'] = False
         
     timestamp_actual = config.get('timestamp', None)
 
     try:
-        connection = db_config.create_connection()
+        connection = DBConfig.create_connection()
 
         query_file_items = process_items(config['dias'], timestamp_actual, config['usar_timestamp'], False, connection)
 
@@ -75,6 +72,10 @@ def process(file_path2, file_propuesta):
                 res = save_processed_files(True)
                 actualizar_log("Proceso completado (optimizacion de etiquetas)")
         
+        if config['dptos_fams'] == True:
+            process_categories(connection)
+            actualizar_log("Proceso completado (obtencion de categorias)")
+
         open_file(res)
 
     except ValueError as e:

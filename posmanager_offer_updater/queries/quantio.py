@@ -194,3 +194,27 @@ Q_BARCODES = """
     FROM productos
     WHERE productos.Activo = 's' 
 """
+
+Q_DEPARTMENTS = """
+    SELECT 
+        IDCategoria,
+        Nombre 
+    FROM 
+        categorias
+"""
+
+Q_FAMILIES = """
+    SELECT 
+        IDSubRubro,
+        Nombre 
+    FROM 
+        subrubros
+"""
+
+Q_PROVIDERS = """
+    SELECT
+        IDProveedor,
+        Nombre
+    FROM
+        proveedores
+"""

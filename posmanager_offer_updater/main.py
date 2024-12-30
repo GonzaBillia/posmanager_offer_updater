@@ -1,8 +1,11 @@
 import tkinter as tk
 from tkinter import messagebox
 from ui.logs import configurar_logger, get_logger
+from config.env import init_env
 
 # CONFIGURACION INICIAL DE LA VENTANA
+
+init_env()
 
 # Crear la ventana principal
 root = tk.Tk()
