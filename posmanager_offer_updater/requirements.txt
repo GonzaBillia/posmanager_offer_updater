@@ -7,12 +7,14 @@ certifi==2024.12.14
 cffi==1.17.1
 charset-normalizer==3.4.0
 Eel==0.18.1
+et_xmlfile==2.0.0
 future==1.0.0
 gevent==24.11.1
 gevent-websocket==0.10.1
 greenlet==3.1.1
 idna==3.10
 numpy==2.2.0
+openpyxl==3.1.5
 packaging==24.2
 pandas==2.2.3
 pefile==2023.2.7
@@ -22,6 +24,7 @@ pyinstaller-hooks-contrib==2024.10
 PyMySQL==1.1.1
 pyparsing==3.2.0
 python-dateutil==2.9.0.post0
+python-dotenv==1.0.1
 pytz==2024.2
 pywin32-ctypes==0.2.3
 requests==2.32.3
