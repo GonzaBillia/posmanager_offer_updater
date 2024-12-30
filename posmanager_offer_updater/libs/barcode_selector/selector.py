@@ -43,6 +43,8 @@ def seleccionar_barcodes(output_file, barcode_query):
         # Reordenar las columnas según la solicitud (codigoInterno, Codebar)
         result = merged_df[['codigoInterno', 'Codebar']]
 
+        result = result.drop_duplicates()
+
         actualizar_log("Cruce de archivo de codigo de barras realizado")
 
         # OUTPUT
