@@ -5,6 +5,7 @@ import datetime
 import shutil
 import json
 import csv
+import pandas as pd
 from datetime import datetime
 from ui.logs import get_logger
 
@@ -60,8 +61,16 @@ def save_direct_file(data, name):
         actualizar_log("No hay resultados para guardar.")
         return
 
+    # Convertir los datos en un DataFrame si es necesario
+    if isinstance(data, list):  # Si los datos son una lista
+        try:
+            data = pd.DataFrame(data)  # Convertir a DataFrame
+        except ValueError as e:
+            actualizar_log(f"Error al convertir los datos a DataFrame: {e}")
+            return
+
     # Definir la ruta del directorio de salida (misma ruta que usas para otros archivos)
-    output_dir = os.path.expanduser(f'~\\Documents\\PM-offer-updater\\Results\\{fecha_hoy}')
+    output_dir = os.path.expanduser(f'~\\Documents\\PM-offer-updater\\processed-files\\Results\\{fecha_hoy}')
 
     # Verificar si la carpeta existe, si no, crearla
     if not os.path.exists(output_dir):
@@ -71,24 +80,10 @@ def save_direct_file(data, name):
     # Crear el nombre de archivo con la fecha de hoy
     output_file = os.path.join(output_dir, f"{name}.txt")
 
-    # Obtener los encabezados del primer resultado
-    encabezados = data[0].keys()
+    data.to_csv(output_file, sep='\t', index=False, header=False)
 
-    try:
-        # Guardar los resultados en el archivo TXT
-        with open(output_file, mode='w', encoding='utf-8') as archivo_txt:
-            # Escribir encabezados
-            archivo_txt.write('\t'.join(encabezados) + '\n')  # Encabezados separados por tabulaciones
-            
-            # Escribir filas
-            for fila in data:
-                archivo_txt.write('\t'.join(str(fila[encabezado]) for encabezado in encabezados) + '\n')
-                actualizar_log(f"Resultados guardados exitosamente en {output_file}.")
+    return output_file
 
-                return output_file
-    except Exception as e:
-        actualizar_log(f"Error al guardar resultados en TXT: {e}")
-        raise e
 
 def save_query_config(data):
     # Definir la ruta del directorio de salida
