@@ -6,20 +6,20 @@ from controllers.process_controller import process  # Importa la función desde 
 # Obtener la función para actualizar logs
 actualizar_log = get_logger()
 
-def procesar(entry_archivo2, entry_propuesta):
+def procesar(entry_archivo2, entry_propuesta, re_etiqueta_var):
     file_path2 = entry_archivo2.get()
     file_propuesta = entry_propuesta.get()
 
     # Llamar al orquestador para procesar los archivos
-    process(file_path2, file_propuesta)
+    process(file_path2, file_propuesta, re_etiqueta_var)
 
 
-def crear_botones(root, entry_archivo2, entry_propuesta):
+def crear_botones(root, entry_archivo2, entry_propuesta, re_etiqueta_var):
     # Botón para procesar
     button_procesar = ttk.Button(
         root, 
         text="Procesar Archivos", 
-        command=lambda: procesar(entry_archivo2, entry_propuesta)
+        command=lambda: procesar(entry_archivo2, entry_propuesta, re_etiqueta_var)
     )
     button_procesar.grid(row=4, column=0, columnspan=3, pady=20, padx=10)
 

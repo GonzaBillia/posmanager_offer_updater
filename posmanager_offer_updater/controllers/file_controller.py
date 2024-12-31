@@ -150,6 +150,11 @@ def update_config_query(key, value):
     # Log de la operación
     actualizar_log(f"Configuración actualizada: {key} = {value}")
     
+import os
+import shutil
+from datetime import datetime
+import pandas as pd
+
 def save_processed_files(isOpt):
     # Definir la fecha de hoy
     fecha_hoy = datetime.today().strftime('%Y-%m-%d')
@@ -174,24 +179,49 @@ def save_processed_files(isOpt):
         else:
             actualizar_log(f"Archivo no encontrado: {archivo_origen}")
 
+    # Lógica para copiar archivos según el valor de isOpt
     if isOpt:
         # Buscar y copiar el archivo `Items`
-        items_file = os.path.join(output_dir_items, f"calc-items-opt-{fecha_hoy}.txt")  # O el nombre real del archivo
+        items_file = os.path.join(output_dir_items, f"calc-items-opt-{fecha_hoy}.txt")
         copiar_archivo(items_file, file_path, "Items-opt.txt")
     else:
         # Buscar y copiar el archivo `Items`
-        items_file = os.path.join(output_dir_items, f"calc-items-{fecha_hoy}.txt")  # O el nombre real del archivo
+        items_file = os.path.join(output_dir_items, f"calc-items-{fecha_hoy}.txt")
         copiar_archivo(items_file, file_path, "Items.txt")
 
         # Buscar y copiar el archivo `Codebars`
-        codebars_file = os.path.join(output_dir_codebars, f"CodBarras-{fecha_hoy}.txt")  # O el nombre real del archivo
+        codebars_file = os.path.join(output_dir_codebars, f"CodBarras-{fecha_hoy}.txt")
         copiar_archivo(codebars_file, file_path, "CodBarras.txt")
 
+    # Lógica para dividir los archivos en partes de 5000 filas si superan ese límite
+    def dividir_archivo_en_partes(ruta_archivo, filas_por_archivo=5000):
+        if os.path.exists(ruta_archivo):
+            # Leer el archivo en un DataFrame
+            df = pd.read_csv(ruta_archivo, sep='\t', engine='python')  # Ajustar separador si es necesario
+
+            # Dividir solo si supera el límite de filas
+            if len(df) > filas_por_archivo:
+                for i in range(0, len(df), filas_por_archivo):
+                    sub_df = df.iloc[i:i + filas_por_archivo]
+                    parte_numero = i // filas_por_archivo + 1
+                    nombre_sub_archivo = os.path.join(file_path, f"{os.path.basename(ruta_archivo).split('.')[0]}_parte_{parte_numero}.txt")
+                    sub_df.to_csv(nombre_sub_archivo, sep='\t', index=False)
+                    actualizar_log(f"Archivo dividido generado: {nombre_sub_archivo}")
+            else:
+                actualizar_log(f"El archivo {ruta_archivo} no supera las {filas_por_archivo} filas. No se dividió.")
+
+    # Aplicar la división a los archivos copiados
+    if isOpt:
+        dividir_archivo_en_partes(os.path.join(file_path, "Items-opt.txt"))
+    else:
+        dividir_archivo_en_partes(os.path.join(file_path, "Items.txt"))
+        dividir_archivo_en_partes(os.path.join(file_path, "CodBarras.txt"))
 
     # Registro de la acción final
-    actualizar_log("Archivos copiados correctamente a la carpeta Results.")
-    
+    actualizar_log("Archivos copiados y divididos correctamente en la carpeta Results.")
+
     return file_path
+
 
 def open_file(file_path):
     if os.path.exists(file_path):

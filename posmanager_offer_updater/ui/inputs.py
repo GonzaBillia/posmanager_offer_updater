@@ -62,9 +62,12 @@ def crear_inputs(root):
     button_propuesta.grid(row=2, column=2, padx=10, pady=10)
 
 
-    label_codebars = ttk.Label(root, text="Codigos de barras actualizados (Consulta a la base de datos)")
-    label_codebars.grid(row=3, column=0, padx=10, pady=10)
+    re_etiqueta_var = tk.BooleanVar(value=False)
+
+    # Crear el Checkbutton asociado a la variable de control
+    re_etiqueta_check = ttk.Checkbutton(root, text="Primer Re Etiquetado Mensual", variable=re_etiqueta_var)
+    re_etiqueta_check.grid(row=3, column=1, padx=10, pady=10)
 
     entry_propuesta.insert(0, default_propuesta)
 
-    return entry_archivo2, entry_propuesta
+    return entry_archivo2, entry_propuesta, re_etiqueta_var.get()

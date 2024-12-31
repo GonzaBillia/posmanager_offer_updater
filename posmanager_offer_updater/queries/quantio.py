@@ -84,10 +84,11 @@ Q_PRODUCTS = """
         LEFT JOIN Subrubros
         ON productos.IDSubRubro = subrubros.IDSubRubro
 
-    WHERE productos.Activo = 's'
-    AND productos.FechaModificacion >= CURDATE() - %(day_filter)s
-    AND productos.idTipoIVA != 1
-    GROUP BY codigoInterno;
+    WHERE 
+        productos.Activo = 's'
+        AND productos.idTipoIVA != 1
+    GROUP BY 
+        codigoInterno;
 """
 
 Q_UPDATED_PRODUCTS = """

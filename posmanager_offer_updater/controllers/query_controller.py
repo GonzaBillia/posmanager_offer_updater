@@ -1,11 +1,11 @@
 import pymysql
 import os
 from ui.logs import get_logger
-from queries.quantio import cod1, cod2, Q_BARCODES, Q_UPDATED_PRODUCTS, Q_DEPARTMENTS, Q_FAMILIES, Q_PROVIDERS
+from queries.quantio import cod1, cod2, Q_BARCODES, Q_UPDATED_PRODUCTS, Q_DEPARTMENTS, Q_FAMILIES, Q_PROVIDERS, Q_PRODUCTS
 
 actualizar_log = get_logger()
 
-def quantio_updated_products(day_filter, timestamp, is_timestamp, optimize_labels, connection):
+def quantio_updated_products(day_filter, timestamp, is_timestamp, optimize_labels, re_etiqueta_var, connection):
     cursor = None
     try:        
         if connection:
@@ -21,11 +21,16 @@ def quantio_updated_products(day_filter, timestamp, is_timestamp, optimize_label
 
             optimize_labels_value = int(optimize_labels)  # True -> 1, False -> 0
 
+            if re_etiqueta_var:
+                cursor.execute(
+                    Q_PRODUCTS
+                )
+            else:
             # Ejecutar la consulta con los parámetros adecuados
-            cursor.execute(
-                Q_UPDATED_PRODUCTS,
-                {"day_filter": day_filter_value, "optimize_labels": optimize_labels_value}
-            )
+                cursor.execute(
+                    Q_UPDATED_PRODUCTS,
+                    {"day_filter": day_filter_value, "optimize_labels": optimize_labels_value}
+                )
             
             # Verificar si la consulta principal devuelve resultados
             resultados = cursor.fetchall()

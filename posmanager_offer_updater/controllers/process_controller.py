@@ -16,7 +16,7 @@ from tkinter import messagebox
 # Obtener la función para actualizar logs
 actualizar_log = get_logger()
 
-def process(file_path2, file_propuesta):
+def process(file_path2, file_propuesta, re_etiqueta_var):
     if not file_path2 or not file_propuesta:
         messagebox.showwarning("Advertencia", "Por favor, seleccione todos los archivos antes de continuar.")
         actualizar_log("Seleccione el / los archivos faltantes.")
@@ -43,7 +43,7 @@ def process(file_path2, file_propuesta):
     try:
         connection = DBConfig.create_connection()
 
-        query_file_items = process_items(config['dias'], timestamp_actual, config['usar_timestamp'], False, connection)
+        query_file_items = process_items(config['dias'], timestamp_actual, config['usar_timestamp'], False, re_etiqueta_var, connection)
 
         query_file_items_opt = None
 
