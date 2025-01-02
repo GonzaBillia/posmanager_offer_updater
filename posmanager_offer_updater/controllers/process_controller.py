@@ -60,7 +60,7 @@ def process(file_path2, file_propuesta, re_etiqueta_var):
             actualizar_log("Proceso completado")
         
         if config['optimizar_etiquetas'] == True:
-            query_file_items_opt = process_items(config['dias'], timestamp_actual, config['usar_timestamp'], config['optimizar_etiquetas'], connection)
+            query_file_items_opt = process_items(config['dias'], timestamp_actual, config['usar_timestamp'], config['optimizar_etiquetas'], re_etiqueta_var, connection)
             output_file_opt = procesar_archivos(query_file_items_opt, file_path2)
             is_Items, items_file_opt = calcular_ofertas(output_file_opt, file_propuesta)
 

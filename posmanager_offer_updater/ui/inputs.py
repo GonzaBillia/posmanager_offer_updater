@@ -7,6 +7,7 @@ from ui.windows import ventana_query_quantio, config
 
 # Obtener la función para actualizar logs
 actualizar_log = get_logger()
+re_etiqueta_var = tk.BooleanVar(value=False)
 
 def seleccionar_archivo_entrada2(entry_archivo2):
     file_path = filedialog.askopenfilename(title="Seleccionar la lista de Items de POSManager", filetypes=[("Archivos TXT", "*.txt"), ("Archivos CSV", "*.csv"), ("Archivos Excel", "*.xlsx;*.xls")])
@@ -28,6 +29,9 @@ def seleccionar_archivo_codebars(entry_codebars):
         entry_codebars.delete(0, tk.END)
         entry_codebars.insert(0, file_path)
         actualizar_log(f"Archivo de código de barras seleccionado: {file_path}")
+
+def revisar_var_etiqueta():
+    return re_etiqueta_var.get()
 
 def crear_inputs(root):
     default_propuesta = os.path.expanduser('~\\Documents\\PM-offer-updater\\import\\Propuesta.xlsx')
@@ -61,11 +65,8 @@ def crear_inputs(root):
     button_propuesta = ttk.Button(root, text="Buscar", command=lambda: seleccionar_archivo_propuesta(entry_propuesta))
     button_propuesta.grid(row=2, column=2, padx=10, pady=10)
 
-
-    re_etiqueta_var = tk.BooleanVar(value=False)
-
     # Crear el Checkbutton asociado a la variable de control
-    re_etiqueta_check = ttk.Checkbutton(root, text="Primer Re Etiquetado Mensual", variable=re_etiqueta_var)
+    re_etiqueta_check = tk.Checkbutton(root, text="Primer Re Etiquetado Mensual", variable=re_etiqueta_var)
     re_etiqueta_check.grid(row=3, column=1, padx=10, pady=10)
 
     entry_propuesta.insert(0, default_propuesta)
