@@ -1,61 +1,54 @@
-import tkinter as tk
+import sys
+from PyQt5.QtWidgets import QListWidget
 
-# Variables globales para el logger
-log_area = None
+# Variable global para la función de log
 actualizar_log = None
 
 class PrintRedirector:
     """
-    Redirige la salida de `print` a un widget de texto.
+    Redirige la salida de `print` a un QListWidget.
     """
     def __init__(self, widget):
         self.widget = widget
 
     def write(self, message):
         if message.strip():  # Evitar mensajes vacíos
-            self.widget.insert(tk.END, message + '\n')
-            self.widget.yview(tk.END)
+            self.widget.addItem(message)
+            self.widget.scrollToBottom()
 
     def flush(self):
         pass
 
-def configurar_logger(root):
+
+def configurar_logger(logger_box: QListWidget):
     """
-    Configura el logger global y define las funciones necesarias.
+    Configura el logger global para redirigir los mensajes al QListWidget.
     """
-    global log_area, actualizar_log
+    global actualizar_log
 
-    try:
-        # Crear el área de logs
-        log_area = tk.Text(root, height=10, width=100, wrap=tk.WORD, state=tk.DISABLED)
-        log_area.grid(row=5, column=0, columnspan=3, pady=10)
+    def log_message(message):
+        try:
+            logger_box.addItem(message)
+            logger_box.scrollToBottom()
+        except Exception as e:
+            print(f"Error al actualizar el logger: {e}", file=sys.stderr)
 
-        # Definir la función para actualizar los logs
-        def log(message):
-            try:
-                log_area.config(state=tk.NORMAL)
-                log_area.insert(tk.END, message + '\n')
-                log_area.yview(tk.END)
-                log_area.config(state=tk.DISABLED)
-                root.update()
-            except tk.TclError:
-                pass
+    actualizar_log = log_message
 
-        # Asignar la función al logger global
-        actualizar_log = log
-
-        # Mensaje de éxito para depuración
-        print("Logger configurado correctamente")
-
-    except Exception as e:
-        print(f"Error configurando el logger: {e}")
-        actualizar_log = None
+    # Redirige `print` a la lista de logs
+    sys.stdout = PrintRedirector(logger_box)
+    sys.stderr = PrintRedirector(logger_box)
 
 
 def get_logger():
     """
-    Devuelve la función `actualizar_log` para usar en otros módulos.
+    Devuelve la función global `actualizar_log`. Si aún no está configurado,
+    configura el logger automáticamente usando un QListWidget temporal.
     """
+    global actualizar_log
     if actualizar_log is None:
-        raise RuntimeError("El logger no ha sido configurado. Llama a `configurar_logger` primero.")
+        from PyQt5.QtWidgets import QListWidget
+        logger_box = QListWidget()  # Crear un QListWidget temporal
+        configurar_logger(logger_box)  # Configurar el logger con el QListWidget
+        print("Logger configurado automáticamente.")
     return actualizar_log

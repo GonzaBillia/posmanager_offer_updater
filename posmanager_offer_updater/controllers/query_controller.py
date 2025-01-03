@@ -1,16 +1,17 @@
 import pymysql
 import os
-from ui.logs import get_logger
 from queries.quantio import cod1, cod2, Q_BARCODES, Q_UPDATED_PRODUCTS, Q_DEPARTMENTS, Q_FAMILIES, Q_PROVIDERS, Q_PRODUCTS
 
-actualizar_log = get_logger()
+def get_actualizar_log():
+    from ui.logs import get_logger
+    return get_logger()
 
 def quantio_updated_products(day_filter, timestamp, is_timestamp, optimize_labels, re_etiqueta_var, connection):
     cursor = None
     try:        
         if connection:
             cursor = connection.cursor()
-            actualizar_log("Cursor abierto para realizar consulta")
+            get_actualizar_log()("Cursor abierto para realizar consulta")
 
             # Ejecutar las sentencias SET sin usar multi=True
             cursor.execute(cod1)  # Ejecuta la primera sentencia SET
@@ -36,24 +37,24 @@ def quantio_updated_products(day_filter, timestamp, is_timestamp, optimize_label
             # Verificar si la consulta principal devuelve resultados
             resultados = cursor.fetchall()
             if resultados:  # Si hay resultados
-                actualizar_log("Consulta realizada correctamente")
+                get_actualizar_log()("Consulta realizada correctamente")
                 return resultados
             else:
-                actualizar_log("No hay resultados para la consulta.")
+                get_actualizar_log()("No hay resultados para la consulta.")
                 return []
         else:
-            actualizar_log("No se pudo establecer la conexión a la base de datos.")
+            get_actualizar_log()("No se pudo establecer la conexión a la base de datos.")
             return []
         
     except pymysql.MySQLError as e:
-        actualizar_log(f"Error ejecutando la consulta: {e}")
+        get_actualizar_log()(f"Error ejecutando la consulta: {e}")
         return []
     
     finally:
         # Asegurarse de que el cursor y la conexión se cierren después de la consulta
         if cursor:
             cursor.close()
-            actualizar_log("Cursor cerrado después de la consulta.")
+            get_actualizar_log()("Cursor cerrado después de la consulta.")
 
 def quantio_updated_barcodes(connection):
     cursor = None
@@ -61,7 +62,7 @@ def quantio_updated_barcodes(connection):
 
         if connection:
             cursor = connection.cursor()
-            actualizar_log("Realizando consulta de códigos de barra a la base de datos")
+            get_actualizar_log()("Realizando consulta de códigos de barra a la base de datos")
             
             # Ejecutar la consulta SELECT
             cursor.execute(Q_BARCODES)
@@ -69,17 +70,17 @@ def quantio_updated_barcodes(connection):
             # Verificar si la consulta principal devuelve resultados
             resultados = cursor.fetchall()
             if resultados:  # Si hay resultados
-                actualizar_log("Consulta realizada correctamente")
+                get_actualizar_log()("Consulta realizada correctamente")
                 return resultados
             else:
-                actualizar_log("No hay resultados para la consulta.")
+                get_actualizar_log()("No hay resultados para la consulta.")
                 return []
         else:
-            actualizar_log("No se pudo establecer la conexión a la base de datos.")
+            get_actualizar_log()("No se pudo establecer la conexión a la base de datos.")
             return []
         
     except pymysql.MySQLError as e:
-        actualizar_log(f"Error ejecutando la consulta: {e}")
+        get_actualizar_log()(f"Error ejecutando la consulta: {e}")
         return []
     
     finally:
@@ -93,7 +94,7 @@ def quantio_updated_departments(connection):
 
         if connection:
             cursor = connection.cursor()
-            actualizar_log("Realizando consulta de departamentos a la base de datos")
+            get_actualizar_log()("Realizando consulta de departamentos a la base de datos")
             
             # Ejecutar la consulta SELECT
             cursor.execute(Q_DEPARTMENTS)
@@ -101,17 +102,17 @@ def quantio_updated_departments(connection):
             # Verificar si la consulta principal devuelve resultados
             resultados = cursor.fetchall()
             if resultados:  # Si hay resultados
-                actualizar_log("Consulta realizada correctamente")
+                get_actualizar_log()("Consulta realizada correctamente")
                 return resultados
             else:
-                actualizar_log("No hay resultados para la consulta.")
+                get_actualizar_log()("No hay resultados para la consulta.")
                 return []
         else:
-            actualizar_log("No se pudo establecer la conexión a la base de datos.")
+            get_actualizar_log()("No se pudo establecer la conexión a la base de datos.")
             return []
         
     except pymysql.MySQLError as e:
-        actualizar_log(f"Error ejecutando la consulta: {e}")
+        get_actualizar_log()(f"Error ejecutando la consulta: {e}")
         return []
     
     finally:
@@ -125,7 +126,7 @@ def quantio_updated_families(connection):
 
         if connection:
             cursor = connection.cursor()
-            actualizar_log("Realizando consulta de familias a la base de datos")
+            get_actualizar_log()("Realizando consulta de familias a la base de datos")
             
             # Ejecutar la consulta SELECT
             cursor.execute(Q_FAMILIES)
@@ -133,17 +134,17 @@ def quantio_updated_families(connection):
             # Verificar si la consulta principal devuelve resultados
             resultados = cursor.fetchall()
             if resultados:  # Si hay resultados
-                actualizar_log("Consulta realizada correctamente")
+                get_actualizar_log()("Consulta realizada correctamente")
                 return resultados
             else:
-                actualizar_log("No hay resultados para la consulta.")
+                get_actualizar_log()("No hay resultados para la consulta.")
                 return []
         else:
-            actualizar_log("No se pudo establecer la conexión a la base de datos.")
+            get_actualizar_log()("No se pudo establecer la conexión a la base de datos.")
             return []
         
     except pymysql.MySQLError as e:
-        actualizar_log(f"Error ejecutando la consulta: {e}")
+        get_actualizar_log()(f"Error ejecutando la consulta: {e}")
         return []
     
     finally:
@@ -157,7 +158,7 @@ def quantio_updated_providers(connection):
 
         if connection:
             cursor = connection.cursor()
-            actualizar_log("Realizando consulta de familias a la base de datos")
+            get_actualizar_log()("Realizando consulta de familias a la base de datos")
             
             # Ejecutar la consulta SELECT
             cursor.execute(Q_PROVIDERS)
@@ -165,17 +166,17 @@ def quantio_updated_providers(connection):
             # Verificar si la consulta principal devuelve resultados
             resultados = cursor.fetchall()
             if resultados:  # Si hay resultados
-                actualizar_log("Consulta realizada correctamente")
+                get_actualizar_log()("Consulta realizada correctamente")
                 return resultados
             else:
-                actualizar_log("No hay resultados para la consulta.")
+                get_actualizar_log()("No hay resultados para la consulta.")
                 return []
         else:
-            actualizar_log("No se pudo establecer la conexión a la base de datos.")
+            get_actualizar_log()("No se pudo establecer la conexión a la base de datos.")
             return []
         
     except pymysql.MySQLError as e:
-        actualizar_log(f"Error ejecutando la consulta: {e}")
+        get_actualizar_log()(f"Error ejecutando la consulta: {e}")
         return []
     
     finally:

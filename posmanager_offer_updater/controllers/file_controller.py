@@ -7,9 +7,10 @@ import json
 import csv
 import pandas as pd
 from datetime import datetime
-from ui.logs import get_logger
 
-actualizar_log = get_logger()
+def get_actualizar_log():
+    from ui.logs import get_logger
+    return get_logger()
 
 def guardar_resultados_como_csv(results,final_path,name):
     """
@@ -19,7 +20,7 @@ def guardar_resultados_como_csv(results,final_path,name):
         resultados (list[dict]): Lista de resultados (deben ser diccionarios).
     """
     if not results:
-        actualizar_log("No hay resultados para guardar.")
+        get_actualizar_log()("No hay resultados para guardar.")
         return
 
     # Definir la ruta del directorio de salida (misma ruta que usas para otros archivos)
@@ -28,7 +29,7 @@ def guardar_resultados_como_csv(results,final_path,name):
     # Verificar si la carpeta existe, si no, crearla
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
-        actualizar_log(f"Directorio creado: {output_dir}")
+        get_actualizar_log()(f"Directorio creado: {output_dir}")
 
     # Crear el nombre de archivo con la fecha de hoy
     fecha_hoy = datetime.today().strftime('%Y-%m-%d')
@@ -48,17 +49,17 @@ def guardar_resultados_como_csv(results,final_path,name):
             # Escribir filas
             writer.writerows(results)
         
-        actualizar_log(f"Resultados guardados exitosamente en {output_file}.")
+        get_actualizar_log()(f"Resultados guardados exitosamente en {output_file}.")
 
         return output_file
     except Exception as e:
-        actualizar_log(f"Error al guardar resultados en CSV: {e}")
+        get_actualizar_log()(f"Error al guardar resultados en CSV: {e}")
         raise e
 
 def save_direct_file(data, name):
     fecha_hoy = datetime.today().strftime('%Y-%m-%d')
     if not data:
-        actualizar_log("No hay resultados para guardar.")
+        get_actualizar_log()("No hay resultados para guardar.")
         return
 
     # Convertir los datos en un DataFrame si es necesario
@@ -66,7 +67,7 @@ def save_direct_file(data, name):
         try:
             data = pd.DataFrame(data)  # Convertir a DataFrame
         except ValueError as e:
-            actualizar_log(f"Error al convertir los datos a DataFrame: {e}")
+            get_actualizar_log()(f"Error al convertir los datos a DataFrame: {e}")
             return
 
     # Definir la ruta del directorio de salida (misma ruta que usas para otros archivos)
@@ -75,7 +76,7 @@ def save_direct_file(data, name):
     # Verificar si la carpeta existe, si no, crearla
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
-        actualizar_log(f"Directorio creado: {output_dir}")
+        get_actualizar_log()(f"Directorio creado: {output_dir}")
 
     # Crear el nombre de archivo con la fecha de hoy
     output_file = os.path.join(output_dir, f"{name}.txt")
@@ -92,7 +93,7 @@ def save_query_config(data):
     # Verificar si la carpeta existe; si no, crearla
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
-        actualizar_log(f"Directorio creado: {output_dir}")
+        get_actualizar_log()(f"Directorio creado: {output_dir}")
 
     # Nombre del archivo de configuración
     archivo_configuracion = os.path.join(output_dir, "config_query_filters.json")
@@ -106,7 +107,7 @@ def save_query_config(data):
         json.dump(data, json_file, indent=4)
 
     # Imprimir y registrar en el log
-    actualizar_log(f"Configuración guardada en: {archivo_configuracion}")
+    get_actualizar_log()(f"Configuración guardada en: {archivo_configuracion}")
 
 def read_query_config():
     # Definir la ruta del directorio de configuración
@@ -115,7 +116,7 @@ def read_query_config():
 
     # Verificar si el archivo existe
     if not os.path.exists(archivo_configuracion):
-        actualizar_log(f"El archivo de configuración no existe: {archivo_configuracion}")
+        get_actualizar_log()(f"El archivo de configuración no existe: {archivo_configuracion}")
         return None
 
     try:
@@ -123,11 +124,11 @@ def read_query_config():
         with open(archivo_configuracion, 'r') as json_file:
             configuracion = json.load(json_file)
         
-        actualizar_log(f"Configuración cargada desde: {archivo_configuracion}")
+        get_actualizar_log()(f"Configuración cargada desde: {archivo_configuracion}")
         return configuracion
 
     except Exception as e:
-        actualizar_log(f"Error al leer el archivo de configuración: {str(e)}")
+        get_actualizar_log()(f"Error al leer el archivo de configuración: {str(e)}")
         return None
     
 def update_config_query(key, value):
@@ -148,7 +149,7 @@ def update_config_query(key, value):
     save_query_config(configuracion)
 
     # Log de la operación
-    actualizar_log(f"Configuración actualizada: {key} = {value}")
+    get_actualizar_log()(f"Configuración actualizada: {key} = {value}")
     
 import os
 import shutil
@@ -175,9 +176,9 @@ def save_processed_files(isOpt):
         if os.path.exists(archivo_origen):
             # Copiar archivo al destino con el nuevo nombre
             shutil.copy(archivo_origen, os.path.join(destino, nuevo_nombre))
-            actualizar_log(f"Archivo copiado: {nuevo_nombre} a {destino}")
+            get_actualizar_log()(f"Archivo copiado: {nuevo_nombre} a {destino}")
         else:
-            actualizar_log(f"Archivo no encontrado: {archivo_origen}")
+            get_actualizar_log()(f"Archivo no encontrado: {archivo_origen}")
 
     # Lógica para copiar archivos según el valor de isOpt
     if isOpt:
@@ -240,7 +241,7 @@ def save_processed_files(isOpt):
         dividir_archivo_en_partes(os.path.join(file_path, "CodBarras.txt"))
 
     # Registro de la acción final
-    actualizar_log("Archivos copiados y divididos correctamente en la carpeta Results.")
+    get_actualizar_log()("Archivos copiados y divididos correctamente en la carpeta Results.")
 
     return file_path
 
@@ -252,9 +253,9 @@ def open_file(file_path):
             subprocess.run(['explorer', file_path])
         elif os.name == 'posix':  # Para sistemas Unix/Linux/Mac
             subprocess.run(['open', file_path])
-        actualizar_log(f"Carpeta con resultados abierta: {file_path}")
+        get_actualizar_log()(f"Carpeta con resultados abierta: {file_path}")
     else:
-        actualizar_log("La carpeta de resultados no existe.")
+        get_actualizar_log()("La carpeta de resultados no existe.")
 
 def get_resource_path(relative_path):
     """Obtiene la ruta absoluta del archivo, ya sea en desarrollo o en un .exe."""

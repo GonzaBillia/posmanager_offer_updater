@@ -2,10 +2,11 @@ import pandas as pd
 import os
 from datetime import datetime
 from tkinter import messagebox
-from ui.logs import get_logger
 
-# Obtener la función para actualizar logs
-actualizar_log = get_logger()
+def get_actualizar_log():
+    from ui.logs import get_logger
+    return get_logger()
+
 
 def seleccionar_barcodes(output_file, barcode_query):
     try:
@@ -15,7 +16,7 @@ def seleccionar_barcodes(output_file, barcode_query):
             df2 = pd.read_csv(barcode_query, sep=';', encoding='utf-8-sig', on_bad_lines='skip')
         except Exception as e:
             messagebox.showerror("Error", f"Error al leer los archivos: {e}")
-            actualizar_log(f"Error al leer los archivos: {e}")
+            get_actualizar_log()(f"Error al leer los archivos: {e}")
             return
 
         # Limpiar los nombres de las columnas eliminando espacios en blanco
@@ -30,11 +31,11 @@ def seleccionar_barcodes(output_file, barcode_query):
         missing_columns_df2 = [col for col in required_columns_df2 if col not in df2.columns]
 
         if missing_columns_df1:
-            actualizar_log(f"Error: Las siguientes columnas no se encuentran en df1: {', '.join(missing_columns_df1)}")
+            get_actualizar_log()(f"Error: Las siguientes columnas no se encuentran en df1: {', '.join(missing_columns_df1)}")
             return
 
         if missing_columns_df2:
-            actualizar_log(f"Error: Las siguientes columnas no se encuentran en df2: {', '.join(missing_columns_df2)}")
+            get_actualizar_log()(f"Error: Las siguientes columnas no se encuentran en df2: {', '.join(missing_columns_df2)}")
             return
         
         # Realizar el "merge" entre las dos tablas usando 'CodigoERP', con un 'left join' para incluir filas de df1 que no están en df2
@@ -45,7 +46,7 @@ def seleccionar_barcodes(output_file, barcode_query):
 
         result = result.drop_duplicates()
 
-        actualizar_log("Cruce de archivo de codigo de barras realizado")
+        get_actualizar_log()("Cruce de archivo de codigo de barras realizado")
 
         # OUTPUT
 
@@ -64,12 +65,12 @@ def seleccionar_barcodes(output_file, barcode_query):
         result.to_csv(output_file, sep='\t', index=False, header=False)
 
         # Aviso del archivo creado
-        actualizar_log(f"Archivo procesado y guardado en {output_file}")
-        actualizar_log("---------- Proceso de preparacion de codigo de barras Terminado ----------")
+        get_actualizar_log()(f"Archivo procesado y guardado en {output_file}")
+        get_actualizar_log()("---------- Proceso de preparacion de codigo de barras Terminado ----------")
 
         return output_file
 
     except Exception as e:
         messagebox.showerror("Error", f"Ocurrió un error: {e}")
-        actualizar_log(f"Ocurrió un error: {e}")
+        get_actualizar_log()(f"Ocurrió un error: {e}")
         return False

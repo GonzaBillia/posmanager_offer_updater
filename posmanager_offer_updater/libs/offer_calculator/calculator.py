@@ -3,11 +3,12 @@ import os
 from datetime import datetime
 import tkinter as tk
 from tkinter import messagebox
-from ui.logs import get_logger
 import unicodedata
 
-# Obtener la función para actualizar logs
-actualizar_log = get_logger()
+def get_actualizar_log():
+    from ui.logs import get_logger
+    return get_logger()
+
 
 def normalizar_texto(texto):
     if isinstance(texto, str):
@@ -26,7 +27,7 @@ def calcular_ofertas(output_file, archivo_propuesta):
             propuesta_df = pd.read_excel(archivo_propuesta)
         except Exception as e:
             messagebox.showerror("Error", f"Error al leer los archivos: {e}")
-            actualizar_log("Error al leer los archivos para calcular")
+            get_actualizar_log()("Error al leer los archivos para calcular")
             return
 
         # Normalizar texto en todas las columnas
@@ -39,16 +40,16 @@ def calcular_ofertas(output_file, archivo_propuesta):
         # Verificar existencia de columnas
         if "IDProducto" not in items_df.columns or propuesta_df.columns[0] != "Id Quantio":
             messagebox.showerror("Error", "¡Faltan las columnas IDProducto o Id Quantio o su nombre ha cambiado")
-            actualizar_log("Faltan las columnas IDProducto o Id Quantio o su nombre ha cambiado. Revisalo y vuelve a intentarlo")
-            actualizar_log(f"Columnas del archivo normalizado: [ {items_df} ]")
-            actualizar_log(f"Columnas del archivo de propuesta: [ {propuesta_df} ]")
+            get_actualizar_log()("Faltan las columnas IDProducto o Id Quantio o su nombre ha cambiado. Revisalo y vuelve a intentarlo")
+            get_actualizar_log()(f"Columnas del archivo normalizado: [ {items_df} ]")
+            get_actualizar_log()(f"Columnas del archivo de propuesta: [ {propuesta_df} ]")
             return
 
         # Asegurar que la columna Precio_de_Oferta_Etiquetas esté en la posición 23
         if "Precio_de_Oferta_Etiquetas" not in items_df.columns:
             messagebox.showerror("Error", "¡La columna Precio_de_Oferta_Etiquetas no existe en el archivo Items!")
-            actualizar_log("¡La columna Precio_de_Oferta_Etiquetas no existe en el archivo Items!")
-            actualizar_log(f"Columnas del archivo normalizado: [ {items_df} ]")
+            get_actualizar_log()("¡La columna Precio_de_Oferta_Etiquetas no existe en el archivo Items!")
+            get_actualizar_log()(f"Columnas del archivo normalizado: [ {items_df} ]")
             return
 
         def calcular_precio_final(id_producto, precio_final):
@@ -71,7 +72,7 @@ def calcular_ofertas(output_file, archivo_propuesta):
                 return "", False  # Si no se encuentra el producto, devolver vacío
             except ValueError:
                 # Manejar si no se puede convertir el descuento o el precio a un número flotante
-                actualizar_log(f"Error al convertir el descuento de {id_producto} o el precio a flotante.")
+                get_actualizar_log()(f"Error al convertir el descuento de {id_producto} o el precio a flotante.")
                 return "", False
 
         # Calcular precios y agregar indicador de descuento
@@ -113,13 +114,13 @@ def calcular_ofertas(output_file, archivo_propuesta):
         items_df.to_csv(output_file, index=False, header=False, sep='\t', encoding='utf-16', float_format="%.2f")
 
         # Registrar la acción
-        actualizar_log(f"Archivo guardado correctamente en: {output_file}")
-        actualizar_log("---------- Proceso de cálculo de oferta Terminado ----------")
+        get_actualizar_log()(f"Archivo guardado correctamente en: {output_file}")
+        get_actualizar_log()("---------- Proceso de cálculo de oferta Terminado ----------")
 
         return True, output_file
     except Exception as e:
         messagebox.showerror("Error", f"Ocurrió un error: {e}")
-        actualizar_log(f"Error {e}")
+        get_actualizar_log()(f"Error {e}")
         return False
 
 def optimizar_lectoras(output_file):
@@ -161,11 +162,11 @@ def optimizar_lectoras(output_file):
         df.to_csv(output_path, index=False, header=False, sep='\t', encoding='utf-16', float_format="%.2f")
 
         # Registrar la acción
-        actualizar_log(f"Archivo guardado correctamente en: {output_path}")
-        actualizar_log("---------- Proceso de optimizacion de etiquetas Terminado ----------")
+        get_actualizar_log()(f"Archivo guardado correctamente en: {output_path}")
+        get_actualizar_log()("---------- Proceso de optimizacion de etiquetas Terminado ----------")
 
         return True
 
     except Exception as e:
-        actualizar_log(f"Error inesperado: {str(e)}")
+        get_actualizar_log()(f"Error inesperado: {str(e)}")
         return False

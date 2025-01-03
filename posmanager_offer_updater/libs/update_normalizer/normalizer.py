@@ -1,10 +1,10 @@
 import pandas as pd
 import os
 from datetime import datetime
-from ui.logs import get_logger
 
-# Obtener la función para actualizar logs
-actualizar_log = get_logger()
+def get_actualizar_log():
+    from ui.logs import get_logger
+    return get_logger()
 
 
 def procesar_archivos(file_path1, file_path2):
@@ -13,26 +13,26 @@ def procesar_archivos(file_path1, file_path2):
         # Leer el archivo df1 (CSV delimitado por tabulaciones)
         df1 = pd.read_csv(file_path1, sep=';', encoding='utf-8-sig', on_bad_lines='skip')
     except pd.errors.ParserError as e:
-        actualizar_log(f"Error de análisis al leer el archivo {file_path1}: {e}")
+        get_actualizar_log()(f"Error de análisis al leer el archivo {file_path1}: {e}")
         return
     except FileNotFoundError as e:
-        actualizar_log(f"Archivo no encontrado: {file_path1}")
+        get_actualizar_log()(f"Archivo no encontrado: {file_path1}")
         return
     except Exception as e:
-        actualizar_log(f"Hubo un error al leer el archivo {file_path1}: {e}")
+        get_actualizar_log()(f"Hubo un error al leer el archivo {file_path1}: {e}")
         return
 
     try:
         # Leer el archivo df2 (TXT delimitado por tabulaciones)
         df2 = pd.read_csv(file_path2, sep='\t', encoding='latin1', on_bad_lines='skip')
     except pd.errors.ParserError as e:
-        actualizar_log(f"Error de análisis al leer el archivo {file_path2}: {e}")
+        get_actualizar_log()(f"Error de análisis al leer el archivo {file_path2}: {e}")
         return
     except FileNotFoundError as e:
-        actualizar_log(f"Archivo no encontrado: {file_path2}")
+        get_actualizar_log()(f"Archivo no encontrado: {file_path2}")
         return
     except Exception as e:
-        actualizar_log(f"Hubo un error al leer el archivo {file_path2}: {e}")
+        get_actualizar_log()(f"Hubo un error al leer el archivo {file_path2}: {e}")
         return
 
     # NORMALIZACION Y JOIN
@@ -49,11 +49,11 @@ def procesar_archivos(file_path1, file_path2):
     missing_columns_df2 = [col for col in required_columns_df2 if col not in df2.columns]
 
     if missing_columns_df1:
-        actualizar_log(f"Error: Las siguientes columnas no se encuentran en df1: {', '.join(missing_columns_df1)}")
+        get_actualizar_log()(f"Error: Las siguientes columnas no se encuentran en df1: {', '.join(missing_columns_df1)}")
         return
 
     if missing_columns_df2:
-        actualizar_log(f"Error: Las siguientes columnas no se encuentran en df2: {', '.join(missing_columns_df2)}")
+        get_actualizar_log()(f"Error: Las siguientes columnas no se encuentran en df2: {', '.join(missing_columns_df2)}")
         return
 
 
@@ -81,7 +81,7 @@ def procesar_archivos(file_path1, file_path2):
     # Reordenar las columnas según la solicitud (CodigoERP, codigoInterno, idItem)
     result = merged_df[columnas_a_mostrar]
 
-    actualizar_log("Cruce de archivos realizado")
+    get_actualizar_log()("Cruce de archivos realizado")
 
     # ID GENERATOR
 
@@ -109,7 +109,7 @@ def procesar_archivos(file_path1, file_path2):
             result.at[index, 'IdItem'] = next(new_ids)
 
     # Mostramos la cantidad de codigos creados
-    actualizar_log(f"Codigos creados: {required_ids}")
+    get_actualizar_log()(f"Codigos creados: {required_ids}")
 
     # Convertimos la columna IdItem a enteros, manejando los NaN
     result['IdItem'] = result['IdItem'].fillna(0).astype(int)
@@ -138,7 +138,7 @@ def procesar_archivos(file_path1, file_path2):
     result.to_csv(output_file, index=False)
 
     #Aviso del archivo creado
-    actualizar_log(f"Archivo procesado y guardado en {output_file}")
-    actualizar_log("---------- Proceso de normalizacion Terminado ----------")
+    get_actualizar_log()(f"Archivo procesado y guardado en {output_file}")
+    get_actualizar_log()("---------- Proceso de normalizacion Terminado ----------")
 
     return output_file
