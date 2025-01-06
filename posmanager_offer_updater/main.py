@@ -21,15 +21,23 @@ except RuntimeError as e:
     print(f"Error: {e}")
     actualizar_log = print  # Reemplazo temporal para evitar fallos críticos
 
+
 # Función para manejar el cierre de la ventana
-def on_closing():
-    respuesta = QMessageBox.question(window, "Confirmar cierre", "¿Estás seguro de que deseas cerrar la ventana?", QMessageBox.Yes | QMessageBox.No)
+def on_closing(event):
+    respuesta = QMessageBox.question(
+        window,
+        "Confirmar cierre",
+        "¿Estás seguro de que deseas cerrar la ventana?",
+        QMessageBox.Yes | QMessageBox.No
+    )
     if respuesta == QMessageBox.Yes:
         actualizar_log("Finalizando Procesos")
-        window.close()
+        event.accept()  # Permitir que la ventana se cierre
+    else:
+        event.ignore()  # Evitar que la ventana se cierre
 
 # Conectar el evento de cierre de la ventana
-window.closeEvent = lambda event: on_closing()
+window.closeEvent = on_closing
 
 if actualizar_log is not None:
     # CONFIGURACION INICIAL DE DB Y ELEMENTOS UI

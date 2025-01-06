@@ -6,12 +6,8 @@ import os
 
 # Obtener la función para actualizar logs
 actualizar_log = get_logger()
-config = read_query_config()
+config = None
 re_etiqueta_var = False
-
-# Inicializar configuración si está vacía
-if config is None:
-    config = {}
 
 def set_re_etiqueta_var(state):
     global re_etiqueta_var
@@ -21,8 +17,13 @@ def revisar_var_etiqueta():
     return re_etiqueta_var
 
 def actualizar_ui_con_configuracion(ui):
+    global config
 # Leer configuración
     config = read_query_config()
+    # Inicializar configuración si está vacía
+    if config is None:
+        config = {}
+
     if config:
         ui.progressBar.setValue(0)
         ui.progressBar.setDisabled(True)
@@ -44,12 +45,10 @@ def actualizar_ui_con_configuracion(ui):
 
 def ventana_query_quantio(ui):
     # Leer configuración actual
-    global config
 
     actualizar_ui_con_configuracion(ui)
 
     def save_config():
-        global config
 
         # Obtener los valores de la UI
         fecha_seleccionada = ui.date_fecha.date().toString("yyyy-MM-dd")
@@ -68,7 +67,6 @@ def ventana_query_quantio(ui):
         # Actualizar y guardar la configuración
         config.update(nueva_configuracion)
         save_query_config(config)
-        actualizar_log("Configuración guardada exitosamente.")
 
     # Conectar el botón de guardar con la función
     ui.button_procesar.clicked.connect(save_config)

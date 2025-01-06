@@ -149,11 +149,7 @@ def update_config_query(key, value):
 
     # Log de la operación
     actualizar_log(f"Configuración actualizada: {key} = {value}")
-    
-import os
-import shutil
-from datetime import datetime
-import pandas as pd
+
 
 def save_processed_files(isOpt):
     # Definir la fecha de hoy

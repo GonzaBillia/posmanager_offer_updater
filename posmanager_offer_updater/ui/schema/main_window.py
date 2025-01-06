@@ -117,7 +117,7 @@ class Ui_main(object):
         self.button_help_propuesta.setGeometry(QtCore.QRect(165, 120, 20, 20))
         self.button_help_propuesta.setIcon(self.file_frame.style().standardIcon(QtWidgets.QStyle.SP_MessageBoxQuestion))
         self.button_help_propuesta.setStyleSheet("QToolButton { border: none; padding: 0px; }")
-        self.button_help_propuesta.setToolTip("Si quieres que se seleccione automáticamente el archivo, guárdalo en: \n 'Documentos\\PM-offer-updater-\\import' con el nombre Propuesta.xlsx")
+        self.button_help_propuesta.setToolTip("Si quieres que se seleccione automáticamente el archivo, guárdalo en: \n 'Documentos\\PM-offer-updater\\import' con el nombre 'Propuesta.xlsx'")
 
         self.divider = QtWidgets.QFrame(self.file_frame)
         self.divider.setGeometry(QtCore.QRect(0, 30, 241, 16))

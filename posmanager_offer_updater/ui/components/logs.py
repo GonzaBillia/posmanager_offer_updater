@@ -41,9 +41,6 @@ def configurar_logger(ui):
         _actualizar_log = log
 
         if _actualizar_log:
-            # Mensaje de éxito para depuración
-            print("Logger configurado correctamente")
-            print(_actualizar_log)
             return _actualizar_log
 
     except Exception as e:
