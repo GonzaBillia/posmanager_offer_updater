@@ -1,7 +1,7 @@
 # posmanager-offer-updater
 
 ## Version
-1.4.1
+2.1.1
 
 El proyecto **posmanager-offer-updater** es una herramienta que permite procesar y actualizar ofertas de productos de una manera automatizada, normalizando los datos y calculando precios de ofertas. La herramienta permite leer archivos de entrada (en formatos CSV y TXT), normalizar los datos y realizar uniones entre ellos para obtener la información final necesaria para las ofertas. Además, genera un archivo de salida con los datos procesados y sin cabeceras.
 
@@ -35,14 +35,13 @@ posmanager-offer-updater
 │       ├── quantio_items.py       # Maneja el flujo de consulta y guardado para productos
 │       └── quantio_categories.py  # Maneja el flujo de consulta y guardado para categorías
 ├── output
-│   └── processed-files            # Carpeta donde se guardan los archivos procesados
+│   └── .exe                       # Carpeta donde se guardan el archivo ejecutable
 ├── queries
 │   └── quantio.py                 # Lista de queries asociadas
 ├── ui
-│   ├── inputs.py                  # Interfaz de usuario para la selección de archivos de entrada
-│   ├── buttons.py                 # Definición de botones en la interfaz
-│   ├── windows.py                 # Ventanas y lógica asociada para la interfaz de usuario
-│   └── logs.py                    # Control de logs en la interfaz visual
+│   ├── components                 # Carpeta que contiene los componentes de la UI
+│   ├── schema                     # Carpeta contenedora de los Widgets de la UI
+│   └── threads                    # Carpeta con los hilos de procesos de UI
 ├── main.py                        # Archivo principal que ejecuta el procesamiento de ofertas
 ├── config.json                    # Archivo de configuración en formato JSON
 ├── README.md                      # Este archivo
