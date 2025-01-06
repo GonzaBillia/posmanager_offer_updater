@@ -1,5 +1,6 @@
 import sys
 from PyQt5.QtWidgets import QApplication, QMainWindow, QMessageBox
+from PyQt5.QtGui import QIcon
 from ui.schema.main_window import Ui_main
 from ui.components.logs import configurar_logger, get_logger
 from config.env import init_env
@@ -9,8 +10,11 @@ init_env()
 
 # Crear la aplicación y la ventana principal
 app = QApplication(sys.argv)
-ui = Ui_main()
+# Establecer el icono de la aplicación
+icono_ruta = "assets/favicon.ico"  # Cambia la ruta según tu proyecto
 window = QMainWindow()
+window.setWindowIcon(QIcon(icono_ruta))
+ui = Ui_main()
 ui.setupUi(window)
 
 # Configurar el logger global y obtener la función para actualizar logs
