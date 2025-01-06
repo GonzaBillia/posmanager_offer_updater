@@ -13,14 +13,18 @@ from libs.barcode_selector import seleccionar_barcodes
 from controllers.file_controller import save_processed_files, open_file, update_config_query
 from tkinter import messagebox
 
+
 # Obtener la función para actualizar logs
 actualizar_log = get_logger()
 
-def process(file_path2, file_propuesta, re_etiqueta_var):
+
+
+def process(file_path2, file_propuesta, re_etiqueta_var, hilo_progreso):
     if not file_path2 or not file_propuesta:
         messagebox.showwarning("Advertencia", "Por favor, seleccione todos los archivos antes de continuar.")
         actualizar_log("Seleccione el / los archivos faltantes.")
         return
+
     
     config = read_query_config()
 
@@ -42,41 +46,56 @@ def process(file_path2, file_propuesta, re_etiqueta_var):
 
     try:
         connection = DBConfig.create_connection()
+        hilo_progreso.progreso_actualizado.emit(100 // 16)
 
         query_file_items = process_items(config['dias'], timestamp_actual, config['usar_timestamp'], False, re_etiqueta_var, connection)
+        hilo_progreso.progreso_actualizado.emit(100 // 16 * 2)
 
         query_file_items_opt = None
 
 
         update_config_query('timestamp', fecha_actual)
+        hilo_progreso.progreso_actualizado.emit(100 // 16 * 3)
 
         output_file = procesar_archivos(query_file_items, file_path2)
+        hilo_progreso.progreso_actualizado.emit(100 // 16 * 4)
         items_file = calcular_ofertas(output_file, file_propuesta)
+        hilo_progreso.progreso_actualizado.emit(100 // 16 * 5)
         query_file_barcodes = process_barcodes(connection)
+        hilo_progreso.progreso_actualizado.emit(100 // 16 * 6)
         codebars_file = seleccionar_barcodes(output_file, query_file_barcodes)
+        hilo_progreso.progreso_actualizado.emit(100 // 16 * 7)
 
         if items_file and codebars_file:
             res = save_processed_files(False)
+            hilo_progreso.progreso_actualizado.emit(100 // 16 * 8)
             actualizar_log("Proceso completado")
         
         if config['optimizar_etiquetas'] == True:
             query_file_items_opt = process_items(config['dias'], timestamp_actual, config['usar_timestamp'], config['optimizar_etiquetas'], re_etiqueta_var, connection)
+            hilo_progreso.progreso_actualizado.emit(100 // 16 * 9)
             output_file_opt = procesar_archivos(query_file_items_opt, file_path2)
+            hilo_progreso.progreso_actualizado.emit(100 // 16 * 10)
             is_Items, items_file_opt = calcular_ofertas(output_file_opt, file_propuesta)
+            hilo_progreso.progreso_actualizado.emit(100 // 16 * 11)
 
             # Cambio de precios para lectoras:
             is_opt = optimizar_lectoras(items_file_opt)
+            hilo_progreso.progreso_actualizado.emit(100 // 16 * 12)
 
 
             if is_Items and is_opt:
                 res = save_processed_files(True)
+                hilo_progreso.progreso_actualizado.emit(100 // 16 * 13)
                 actualizar_log("Proceso completado (optimizacion de etiquetas)")
         
         if config['dpts_fams'] == True:
             process_categories(connection)
+            hilo_progreso.progreso_actualizado.emit(100 // 16 * 14)
             actualizar_log("Proceso completado (obtencion de categorias)")
 
         open_file(res)
+        hilo_progreso.progreso_actualizado.emit(100 // 16 * 15)
 
     except ValueError as e:
         messagebox.showerror("Error", str(e))
@@ -85,4 +104,6 @@ def process(file_path2, file_propuesta, re_etiqueta_var):
     finally:
         if connection:
             connection.close()  # Cerrar la conexión
+            hilo_progreso.progreso_actualizado.emit(100)
             actualizar_log("Conexión cerrada.")
+            hilo_progreso.detener()

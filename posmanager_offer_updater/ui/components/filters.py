@@ -24,6 +24,8 @@ def actualizar_ui_con_configuracion(ui):
 # Leer configuración
     config = read_query_config()
     if config:
+        ui.progressBar.setValue(0)
+        ui.progressBar.setDisabled(True)
         ultima_fecha = config.get("timestamp", "No disponible")
         fecha = config.get('dias')
         ui.label_ult_fecha.setText(f"{ultima_fecha}")
@@ -67,7 +69,6 @@ def ventana_query_quantio(ui):
         config.update(nueva_configuracion)
         save_query_config(config)
         actualizar_log("Configuración guardada exitosamente.")
-        QMessageBox.information(ui.centralwidget, "Éxito", "Configuración guardada exitosamente.")
 
     # Conectar el botón de guardar con la función
     ui.button_procesar.clicked.connect(save_config)

@@ -139,7 +139,6 @@ class Ui_main(object):
         self.progress_frame.setObjectName("progress_frame")
         self.progressBar = QtWidgets.QProgressBar(self.progress_frame)
         self.progressBar.setGeometry(QtCore.QRect(30, 10, 441, 23))
-        self.progressBar.setProperty("value", 24)
         self.progressBar.setObjectName("progressBar")
         main.setCentralWidget(self.centralwidget)
 
