@@ -1,6 +1,6 @@
 from controllers.query_controller import quantio_updated_barcodes
 from controllers.file_controller import guardar_resultados_como_csv
-from ui.logs import get_logger
+from ui.components.logs import get_logger
 
 actualizar_log = get_logger()
 

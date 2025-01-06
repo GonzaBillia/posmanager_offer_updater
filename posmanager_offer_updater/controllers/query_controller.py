@@ -1,6 +1,6 @@
 import pymysql
 import os
-from ui.logs import get_logger
+from ui.components.logs import get_logger
 from queries.quantio import cod1, cod2, Q_BARCODES, Q_UPDATED_PRODUCTS, Q_DEPARTMENTS, Q_FAMILIES, Q_PROVIDERS, Q_PRODUCTS
 
 actualizar_log = get_logger()

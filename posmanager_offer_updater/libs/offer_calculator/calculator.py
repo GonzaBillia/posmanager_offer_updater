@@ -3,7 +3,7 @@ import os
 from datetime import datetime
 import tkinter as tk
 from tkinter import messagebox
-from ui.logs import get_logger
+from ui.components.logs import get_logger
 import unicodedata
 
 # Obtener la función para actualizar logs

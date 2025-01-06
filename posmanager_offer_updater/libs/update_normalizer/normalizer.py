@@ -1,7 +1,7 @@
 import pandas as pd
 import os
 from datetime import datetime
-from ui.logs import get_logger
+from ui.components.logs import get_logger
 
 # Obtener la función para actualizar logs
 actualizar_log = get_logger()

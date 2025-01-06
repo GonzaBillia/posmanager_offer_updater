@@ -2,7 +2,7 @@ import json
 import pymysql
 from pymysql import MySQLError
 from tkinter import messagebox
-from ui.logs import get_logger
+from ui.components.logs import get_logger
 import os
 import logging
 

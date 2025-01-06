@@ -7,7 +7,7 @@ import json
 import csv
 import pandas as pd
 from datetime import datetime
-from ui.logs import get_logger
+from ui.components.logs import get_logger
 
 actualizar_log = get_logger()
 

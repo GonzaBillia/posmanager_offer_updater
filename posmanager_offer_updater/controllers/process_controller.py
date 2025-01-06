@@ -1,6 +1,6 @@
 # libs/orquestators/orquestador.py
 import os
-from ui.logs import get_logger
+from ui.components.logs import get_logger
 from datetime import datetime
 from config.db_config import DBConfig
 from controllers.file_controller import read_query_config

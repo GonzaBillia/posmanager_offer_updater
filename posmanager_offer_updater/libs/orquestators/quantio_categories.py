@@ -1,6 +1,6 @@
 from controllers.query_controller import quantio_updated_departments, quantio_updated_families, quantio_updated_providers
 from controllers.file_controller import save_direct_file
-from ui.logs import get_logger
+from ui.components.logs import get_logger
 
 actualizar_log = get_logger()
 
