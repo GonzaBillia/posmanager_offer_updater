@@ -6,6 +6,13 @@ import os
 # Obtener la función para actualizar logs
 actualizar_log = get_logger()
 
+option = None
+
+def get_option(ui):
+    option = ui.dropdown_option_propuesta.currentIndex()
+
+    return option
+
 def seleccionar_archivo_entrada2(entry_archivo2):
     file_path, _ = QFileDialog.getOpenFileName(None, "Seleccionar la lista de Items de POSManager", "", "Archivos TXT (*.txt);;Archivos CSV (*.csv);;Archivos Excel (*.xlsx *.xls)")
     if file_path:

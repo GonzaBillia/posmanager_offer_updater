@@ -119,6 +119,16 @@ class Ui_main(object):
         self.button_help_propuesta.setStyleSheet("QToolButton { border: none; padding: 0px; }")
         self.button_help_propuesta.setToolTip("Si quieres que se seleccione automáticamente el archivo, guárdalo en: \n 'Documentos\\PM-offer-updater\\import' con el nombre 'Propuesta.xlsx'")
 
+        self.label_option_propuesta = QtWidgets.QLabel(self.file_frame)
+        self.label_option_propuesta.setGeometry(QtCore.QRect(0, 180, 120, 20))
+        self.label_option_propuesta.setObjectName("label_option_propuesta")
+
+         # Crear el QComboBox (Dropdown)
+        self.dropdown_option_propuesta = QtWidgets.QComboBox(self.file_frame)
+        self.dropdown_option_propuesta.setGeometry(QtCore.QRect(130, 180, 100, 20))
+        self.dropdown_option_propuesta.setObjectName("dropdown_option_propuesta")
+
+
         self.divider = QtWidgets.QFrame(self.file_frame)
         self.divider.setGeometry(QtCore.QRect(0, 30, 241, 16))
         self.divider.setFrameShape(QtWidgets.QFrame.HLine)
@@ -160,5 +170,14 @@ class Ui_main(object):
         self.button_items.setText(_translate("main", "Buscar"))
         self.button_propuesta.setText(_translate("main", "Buscar"))
         self.label_propuesta.setText(_translate("main", "Archivo de Propuesta comercial"))
+        self.label_option_propuesta.setText(_translate("main", "Procesar por Propuesta"))
         self.button_procesar.setText(_translate("main", "Procesar Archivos"))
+        # Añadir las opciones al dropdown
+        self.dropdown_option_propuesta.addItems([
+            _translate("main", "NO"),
+            _translate("main", "Por Precio Fijo"),
+            _translate("main", "Por Descuento"),
+            _translate("main", "Por Oferta"),
+            _translate("main", "Por Actualización"),
+        ])
 

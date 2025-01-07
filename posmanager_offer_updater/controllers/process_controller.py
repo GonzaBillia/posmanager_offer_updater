@@ -3,10 +3,11 @@ import os
 from ui.components.logs import get_logger
 from datetime import datetime
 from config.db_config import DBConfig
-from controllers.file_controller import read_query_config
+from controllers.file_controller import read_query_config, save_proposal_backup
 from libs.orquestators.quantio_items import process_file as process_items
 from libs.orquestators.quantio_barcodes import process_file as process_barcodes
 from libs.orquestators.quantio_categories import process_categories_files as process_categories
+from libs.orquestators.proposal_items import process_proposal
 from libs.update_normalizer import procesar_archivos
 from libs.offer_calculator import calcular_ofertas, optimizar_lectoras
 from libs.barcode_selector import seleccionar_barcodes
@@ -19,12 +20,13 @@ actualizar_log = get_logger()
 
 
 
-def process(file_path2, file_propuesta, re_etiqueta_var, hilo_progreso):
+def process(file_path2, file_propuesta, re_etiqueta_var, option, hilo_progreso):
     if not file_path2 or not file_propuesta:
         messagebox.showwarning("Advertencia", "Por favor, seleccione todos los archivos antes de continuar.")
         actualizar_log("Seleccione el / los archivos faltantes.")
         return
 
+    save_proposal_backup(file_propuesta)
     
     config = read_query_config()
 
@@ -48,7 +50,11 @@ def process(file_path2, file_propuesta, re_etiqueta_var, hilo_progreso):
         connection = DBConfig.create_connection()
         hilo_progreso.progreso_actualizado.emit(100 // 16)
 
-        query_file_items = process_items(config['dias'], timestamp_actual, config['usar_timestamp'], False, re_etiqueta_var, connection)
+        if option != 0:
+            query_file_items = process_proposal(file_propuesta, option, connection)
+        else:
+            query_file_items = process_items(config['dias'], timestamp_actual, config['usar_timestamp'], False, re_etiqueta_var, connection)
+
         hilo_progreso.progreso_actualizado.emit(100 // 16 * 2)
 
         query_file_items_opt = None
@@ -72,7 +78,11 @@ def process(file_path2, file_propuesta, re_etiqueta_var, hilo_progreso):
             actualizar_log("Proceso completado")
         
         if config['optimizar_etiquetas'] == True:
-            query_file_items_opt = process_items(config['dias'], timestamp_actual, config['usar_timestamp'], config['optimizar_etiquetas'], re_etiqueta_var, connection)
+            if option != 0:
+                query_file_items_opt = query_file_items
+            else:    
+                query_file_items_opt = process_items(config['dias'], timestamp_actual, config['usar_timestamp'], config['optimizar_etiquetas'], re_etiqueta_var, connection)
+            
             hilo_progreso.progreso_actualizado.emit(100 // 16 * 9)
             output_file_opt = procesar_archivos(query_file_items_opt, file_path2)
             hilo_progreso.progreso_actualizado.emit(100 // 16 * 10)
