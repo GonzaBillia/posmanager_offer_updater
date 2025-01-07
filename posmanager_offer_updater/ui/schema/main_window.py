@@ -157,7 +157,7 @@ class Ui_main(object):
 
     def retranslateUi(self, main):
         _translate = QtCore.QCoreApplication.translate
-        main.setWindowTitle(_translate("main", "Actualizador POSManager 2.1.1"))
+        main.setWindowTitle(_translate("main", "Actualizador POSManager"))
         self.title_2.setText(_translate("main", "Filtros y Opciones:"))
         self.label_fecha.setText(_translate("main", "Utilizar Fecha Fija"))
         self.label_ultima_fecha.setText(_translate("main", "Última Fecha de Actualización"))
