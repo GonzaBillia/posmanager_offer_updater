@@ -25,8 +25,6 @@ def process(file_path2, file_propuesta, option, hilo_progreso):
         messagebox.showwarning("Advertencia", "Por favor, seleccione todos los archivos antes de continuar.")
         actualizar_log("Seleccione el / los archivos faltantes.")
         return
-
-    save_proposal_backup(file_propuesta)
     
     config = read_query_config()
 
@@ -50,7 +48,8 @@ def process(file_path2, file_propuesta, option, hilo_progreso):
         hilo_progreso.progreso_actualizado.emit(100 // 16 * 2)
 
         if option != 0:
-            query_file_items = process_proposal(file_propuesta, option, connection)
+            price_changes = process_items(config['dias'], timestamp_actual, config['usar_timestamp'], True, connection)
+            query_file_items = process_proposal(file_propuesta, option, price_changes, connection)
         else:
             query_file_items = process_items(config['dias'], timestamp_actual, config['usar_timestamp'], False, connection)
 
@@ -58,7 +57,7 @@ def process(file_path2, file_propuesta, option, hilo_progreso):
 
         query_file_items_opt = None
 
-
+        save_proposal_backup(file_propuesta)
         update_config_query('timestamp', fecha_actual)
 
         output_file = procesar_archivos(query_file_items, file_path2)

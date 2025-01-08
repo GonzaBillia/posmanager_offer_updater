@@ -37,7 +37,6 @@ def filter_by_proposal(proposal):
 
         # Convertir el conjunto a lista y mostrar el resultado
         dif_list = list(dif_list)
-        print(dif_list)
 
         return dif_list
 
