@@ -5,7 +5,7 @@ from queries.quantio import cod1, cod2, Q_BARCODES, Q_UPDATED_PRODUCTS, Q_DEPART
 
 actualizar_log = get_logger()
 
-def quantio_updated_products(day_filter, timestamp, is_timestamp, optimize_labels, re_etiqueta_var, connection):
+def quantio_updated_products(day_filter, timestamp, is_timestamp, optimize_labels, connection):
     cursor = None
     try:        
         if connection:
@@ -20,16 +20,11 @@ def quantio_updated_products(day_filter, timestamp, is_timestamp, optimize_label
             day_filter_value = timestamp if is_timestamp and timestamp is not None else day_filter
 
             optimize_labels_value = int(optimize_labels)  # True -> 1, False -> 0
-            if re_etiqueta_var:
-                cursor.execute(
-                    Q_PRODUCTS
-                )
-            else:
             # Ejecutar la consulta con los parámetros adecuados
-                cursor.execute(
-                    Q_UPDATED_PRODUCTS,
-                    {"day_filter": day_filter_value, "optimize_labels": optimize_labels_value}
-                )
+            cursor.execute(
+                Q_UPDATED_PRODUCTS,
+                {"day_filter": day_filter_value, "optimize_labels": optimize_labels_value}
+            )
             
             # Verificar si la consulta principal devuelve resultados
             resultados = cursor.fetchall()

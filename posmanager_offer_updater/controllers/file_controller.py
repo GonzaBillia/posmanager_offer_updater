@@ -98,7 +98,7 @@ def save_proposal_backup(input_file):
 
     # Crear el nombre del archivo de salida
     fecha_hoy = datetime.today().strftime('%Y-%m-%d')
-    output_file = os.path.join(output_dir, f"Propuesta_{fecha_hoy}.xlsx")
+    output_file = os.path.join(output_dir, f"Propuesta.xlsx")
 
     # Copiar el archivo de entrada a la ruta de salida
     try:

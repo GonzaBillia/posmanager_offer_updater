@@ -11,13 +11,12 @@ name = "Items"
 def process_proposal(proposal, option, connection):
     list = None
     if option == 1:
-        list = filter_fixed_price(proposal)
-    elif option == 2:
-        list = filter_discount_price(proposal)
-    elif option == 3:
         list = filter_by_offer(proposal)
-    else:
+    elif option == 2:
         list = filter_by_proposal(proposal)
+    else:
+        pass
+
 
     try:
         data = quantio_selected_products(list, connection)

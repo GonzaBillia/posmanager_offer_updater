@@ -60,26 +60,13 @@ class Ui_main(object):
         self.date_fecha = QtWidgets.QDateEdit(self.options_frame)
         self.date_fecha.setGeometry(QtCore.QRect(150, 50, 100, 22))
         self.date_fecha.setObjectName("date_fecha")
-        self.label_optimizar = QtWidgets.QLabel(self.options_frame)
-        self.label_optimizar.setGeometry(QtCore.QRect(10, 120, 181, 21))
-        self.label_optimizar.setObjectName("label_optimizar")
-        self.check_labels = QtWidgets.QCheckBox(self.options_frame)
-        self.check_labels.setGeometry(QtCore.QRect(210, 120, 16, 21))
-        self.check_labels.setText("")
-        self.check_labels.setObjectName("check_labels")
         self.label_categorias = QtWidgets.QLabel(self.options_frame)
-        self.label_categorias.setGeometry(QtCore.QRect(10, 150, 181, 21))
+        self.label_categorias.setGeometry(QtCore.QRect(10, 130, 181, 21))
         self.label_categorias.setObjectName("label_categorias")
         self.check_categories = QtWidgets.QCheckBox(self.options_frame)
-        self.check_categories.setGeometry(QtCore.QRect(210, 150, 16, 21))
+        self.check_categories.setGeometry(QtCore.QRect(210, 130, 16, 21))
         self.check_categories.setText("")
         self.check_categories.setObjectName("check_categories")
-        self.label_re_etiquetado = QtWidgets.QLabel(self.options_frame)
-        self.label_re_etiquetado.setGeometry(QtCore.QRect(10, 180, 181, 21))
-        self.label_re_etiquetado.setObjectName("label_re_etiquetado")
-        self.check_re_etiquetado = QtWidgets.QCheckBox(self.options_frame)
-        self.check_re_etiquetado.setGeometry(QtCore.QRect(210, 180, 16, 21))
-        self.check_re_etiquetado.setObjectName("check_re_etiquetado")
         self.file_frame = QtWidgets.QFrame(self.centralwidget)
         self.file_frame.setGeometry(QtCore.QRect(10, 10, 241, 221))
         self.file_frame.setFrameShape(QtWidgets.QFrame.StyledPanel)
@@ -111,13 +98,6 @@ class Ui_main(object):
         self.label_propuesta = QtWidgets.QLabel(self.file_frame)
         self.label_propuesta.setGeometry(QtCore.QRect(0, 120, 161, 20))
         self.label_propuesta.setObjectName("label_propuesta")
-
-        # QToolButton (icono de ayuda)
-        self.button_help_propuesta = QtWidgets.QToolButton(self.file_frame)
-        self.button_help_propuesta.setGeometry(QtCore.QRect(165, 120, 20, 20))
-        self.button_help_propuesta.setIcon(self.file_frame.style().standardIcon(QtWidgets.QStyle.SP_MessageBoxQuestion))
-        self.button_help_propuesta.setStyleSheet("QToolButton { border: none; padding: 0px; }")
-        self.button_help_propuesta.setToolTip("Si quieres que se seleccione automáticamente el archivo, guárdalo en: \n 'Documentos\\PM-offer-updater\\import' con el nombre 'Propuesta.xlsx'")
 
         self.label_option_propuesta = QtWidgets.QLabel(self.file_frame)
         self.label_option_propuesta.setGeometry(QtCore.QRect(0, 180, 120, 20))
@@ -161,10 +141,7 @@ class Ui_main(object):
         self.title_2.setText(_translate("main", "Filtros y Opciones:"))
         self.label_fecha.setText(_translate("main", "Utilizar Fecha Fija"))
         self.label_ultima_fecha.setText(_translate("main", "Última Fecha de Actualización"))
-        self.label_optimizar.setText(_translate("main", "Optimizar para Etiquetas"))
-        self.label_categorias.setText(_translate("main", "Actualizar Categorías"))
-        self.label_re_etiquetado.setText(_translate("main", "Primer re etiquetado mensual"))
-        self.check_re_etiquetado.setText(_translate("main", "Primer re etiquetado mensual"))
+        self.label_categorias.setText(_translate("main", "Actualizar Provs, Dptos y Fams"))
         self.title.setText(_translate("main", "Selecciona los archivos necesarios:"))
         self.label_items.setText(_translate("main", "Lista completa de productos de POSManager"))
         self.button_items.setText(_translate("main", "Buscar"))
@@ -175,8 +152,6 @@ class Ui_main(object):
         # Añadir las opciones al dropdown
         self.dropdown_option_propuesta.addItems([
             _translate("main", "NO"),
-            _translate("main", "Por Precio Fijo"),
-            _translate("main", "Por Descuento"),
             _translate("main", "Por Oferta"),
             _translate("main", "Por Actualización"),
         ])

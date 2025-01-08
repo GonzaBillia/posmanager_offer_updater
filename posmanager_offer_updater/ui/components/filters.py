@@ -7,18 +7,10 @@ import os
 # Obtener la función para actualizar logs
 actualizar_log = get_logger()
 config = None
-re_etiqueta_var = False
-
-def set_re_etiqueta_var(state):
-    global re_etiqueta_var
-    re_etiqueta_var = state == 2
-
-def revisar_var_etiqueta():
-    return re_etiqueta_var
 
 def actualizar_ui_con_configuracion(ui):
     global config
-# Leer configuración
+    # Leer configuración
     config = read_query_config()
     # Inicializar configuración si está vacía
     if config is None:
@@ -32,12 +24,10 @@ def actualizar_ui_con_configuracion(ui):
         ui.label_ult_fecha.setText(f"{ultima_fecha}")
         ui.date_fecha.setDate(QDate.fromString(fecha, "yyyy-MM-dd"))
         ui.check_ultima_fecha.setChecked(config.get('usar_timestamp', False))
-        ui.check_labels.setChecked(config.get('optimizar_etiquetas', False))
         ui.check_categories.setChecked(config.get('dpts_fams', False))
         
         # Conectar el evento después de cargar la UI
         ui.check_ultima_fecha.stateChanged.connect(lambda: ui.date_fecha.setDisabled(ui.check_ultima_fecha.isChecked()))
-        ui.check_re_etiquetado.stateChanged.connect(lambda state: set_re_etiqueta_var(state))
 
         if ui.check_ultima_fecha.isChecked():
             ui.date_fecha.setDisabled(True)
@@ -53,14 +43,12 @@ def ventana_query_quantio(ui):
         # Obtener los valores de la UI
         fecha_seleccionada = ui.date_fecha.date().toString("yyyy-MM-dd")
         usar_ultima_fecha = ui.check_ultima_fecha.isChecked()
-        usar_optimizar_etiqueta = ui.check_labels.isChecked()
         usar_categorias = ui.check_categories.isChecked()
 
         # Crear el diccionario de configuración
         nueva_configuracion = {
             'dias': fecha_seleccionada,
             'usar_timestamp': usar_ultima_fecha,
-            'optimizar_etiquetas': usar_optimizar_etiqueta,
             'dpts_fams': usar_categorias
         }
 
@@ -71,5 +59,4 @@ def ventana_query_quantio(ui):
     # Conectar el botón de guardar con la función
     ui.button_procesar.clicked.connect(save_config)
 
-    return re_etiqueta_var
 

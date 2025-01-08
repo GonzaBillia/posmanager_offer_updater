@@ -27,13 +27,10 @@ def seleccionar_archivo_propuesta(entry_propuesta):
 
 
 def crear_inputs(ui):
-    default_propuesta = os.path.expanduser('~\\Documents\\PM-offer-updater\\import\\Propuesta.xlsx')
 
     # Conectar los botones existentes en la UI con las funciones de selección de archivo
     ui.button_items.clicked.connect(lambda: seleccionar_archivo_entrada2(ui.input_items))
     ui.button_propuesta.clicked.connect(lambda: seleccionar_archivo_propuesta(ui.input_propuesta))
-
-    ui.input_propuesta.setText(default_propuesta)
 
     return ui.input_items, ui.input_propuesta
 

@@ -20,7 +20,7 @@ actualizar_log = get_logger()
 
 
 
-def process(file_path2, file_propuesta, re_etiqueta_var, option, hilo_progreso):
+def process(file_path2, file_propuesta, option, hilo_progreso):
     if not file_path2 or not file_propuesta:
         messagebox.showwarning("Advertencia", "Por favor, seleccione todos los archivos antes de continuar.")
         actualizar_log("Seleccione el / los archivos faltantes.")
@@ -33,10 +33,9 @@ def process(file_path2, file_propuesta, re_etiqueta_var, option, hilo_progreso):
     fecha_actual = datetime.now()
 
     fecha_actual = datetime.strftime(fecha_actual, '%Y-%m-%d %H-%M-%S')
+    hilo_progreso.progreso_actualizado.emit(100 // 16)
 
     # Inicializar el valor de 'timestamp' si no existe
-    if 'optimizar_etiquetas' not in config:
-        config['optimizar_etiquetas'] = False
 
     if 'usar_timestamp' not in config:
         config['usar_timestamp'] = False
@@ -48,20 +47,19 @@ def process(file_path2, file_propuesta, re_etiqueta_var, option, hilo_progreso):
 
     try:
         connection = DBConfig.create_connection()
-        hilo_progreso.progreso_actualizado.emit(100 // 16)
+        hilo_progreso.progreso_actualizado.emit(100 // 16 * 2)
 
         if option != 0:
             query_file_items = process_proposal(file_propuesta, option, connection)
         else:
-            query_file_items = process_items(config['dias'], timestamp_actual, config['usar_timestamp'], False, re_etiqueta_var, connection)
+            query_file_items = process_items(config['dias'], timestamp_actual, config['usar_timestamp'], False, connection)
 
-        hilo_progreso.progreso_actualizado.emit(100 // 16 * 2)
+        hilo_progreso.progreso_actualizado.emit(100 // 16 * 3)
 
         query_file_items_opt = None
 
 
         update_config_query('timestamp', fecha_actual)
-        hilo_progreso.progreso_actualizado.emit(100 // 16 * 3)
 
         output_file = procesar_archivos(query_file_items, file_path2)
         hilo_progreso.progreso_actualizado.emit(100 // 16 * 4)
@@ -77,27 +75,28 @@ def process(file_path2, file_propuesta, re_etiqueta_var, option, hilo_progreso):
             hilo_progreso.progreso_actualizado.emit(100 // 16 * 8)
             actualizar_log("Proceso completado")
         
-        if config['optimizar_etiquetas'] == True:
-            if option != 0:
-                query_file_items_opt = query_file_items
-            else:    
-                query_file_items_opt = process_items(config['dias'], timestamp_actual, config['usar_timestamp'], config['optimizar_etiquetas'], re_etiqueta_var, connection)
-            
-            hilo_progreso.progreso_actualizado.emit(100 // 16 * 9)
-            output_file_opt = procesar_archivos(query_file_items_opt, file_path2)
-            hilo_progreso.progreso_actualizado.emit(100 // 16 * 10)
-            is_Items, items_file_opt = calcular_ofertas(output_file_opt, file_propuesta)
-            hilo_progreso.progreso_actualizado.emit(100 // 16 * 11)
 
-            # Cambio de precios para lectoras:
-            is_opt = optimizar_lectoras(items_file_opt)
-            hilo_progreso.progreso_actualizado.emit(100 // 16 * 12)
+        # Optimizacion de Etiquetas
+        if option != 0:
+            query_file_items_opt = query_file_items
+        else:    
+            query_file_items_opt = process_items(config['dias'], timestamp_actual, config['usar_timestamp'], True, connection)
+        
+        hilo_progreso.progreso_actualizado.emit(100 // 16 * 9)
+        output_file_opt = procesar_archivos(query_file_items_opt, file_path2)
+        hilo_progreso.progreso_actualizado.emit(100 // 16 * 10)
+        is_Items, items_file_opt = calcular_ofertas(output_file_opt, file_propuesta)
+        hilo_progreso.progreso_actualizado.emit(100 // 16 * 11)
+
+        # Cambio de precios para lectoras:
+        is_opt = optimizar_lectoras(items_file_opt)
+        hilo_progreso.progreso_actualizado.emit(100 // 16 * 12)
 
 
-            if is_Items and is_opt:
-                res = save_processed_files(True)
-                hilo_progreso.progreso_actualizado.emit(100 // 16 * 13)
-                actualizar_log("Proceso completado (optimizacion de etiquetas)")
+        if is_Items and is_opt:
+            res = save_processed_files(True)
+            hilo_progreso.progreso_actualizado.emit(100 // 16 * 13)
+            actualizar_log("Proceso completado (optimizacion de etiquetas)")
         
         if config['dpts_fams'] == True:
             process_categories(connection)

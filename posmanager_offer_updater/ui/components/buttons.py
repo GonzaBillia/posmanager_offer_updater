@@ -1,5 +1,4 @@
 from ui.components.logs import get_logger
-from ui.components.filters import revisar_var_etiqueta
 from ui.components.filters import actualizar_ui_con_configuracion
 from ui.components.inputs import get_option
 from controllers.process_controller import process  # Importa la función desde el orquestador
@@ -22,11 +21,10 @@ def procesar(entry_archivo2, entry_propuesta, ui):
     
     file_path2 = entry_archivo2.text()
     file_propuesta = entry_propuesta.text()
-    re_etiqueta_var = revisar_var_etiqueta()
     option = get_option(ui)
 
     # Llamar al orquestador para procesar los archivos
-    process(file_path2, file_propuesta, re_etiqueta_var, option, hilo_progreso)
+    process(file_path2, file_propuesta, option, hilo_progreso)
     actualizar_ui_con_configuracion(ui)
 
 def crear_botones(ui, entry_archivo2, entry_propuesta):
