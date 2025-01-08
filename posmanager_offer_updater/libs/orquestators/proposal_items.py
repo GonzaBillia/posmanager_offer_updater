@@ -22,8 +22,9 @@ def process_proposal(proposal, option, price_changes, connection):
         df1 = pd.read_csv(price_changes, sep=';', encoding='utf-8-sig', on_bad_lines='skip')
         price_list = df1['codigoInterno'].tolist()
         list.extend(price_list)
-        print(len(list))
-        data = quantio_selected_products(list, connection)
+        final_list = list(dict.fromkeys(final_list))
+        
+        data = quantio_selected_products(final_list, connection)
         output_file = guardar_resultados_como_csv(data, file_path, name)
         actualizar_log("El archivo Items Quantio se proceso correctamente")
         return output_file
