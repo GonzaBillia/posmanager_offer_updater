@@ -18,9 +18,13 @@ def filter_by_proposal(proposal):
         df1 = pd.read_excel(proposal)
         df2 = pd.read_excel(os.path.join(carpeta, last_proposal))
 
+        # Eliminar filas con NaN en las dos primeras columnas
+        df1 = df1.dropna(subset=[df1.columns[0], df1.columns[1]])
+        df2 = df2.dropna(subset=[df2.columns[0], df2.columns[1]])
+
         # Convertir las columnas a diccionarios
-        dict1 = dict(zip(df1.iloc[:, 0].tolist(), df1.iloc[:, 1].tolist()))
-        dict2 = dict(zip(df2.iloc[:, 0].tolist(), df2.iloc[:, 1].tolist()))
+        dict1 = dict(zip(df1.iloc[:, 0].astype(int).tolist(), df1.iloc[:, 1].tolist()))
+        dict2 = dict(zip(df2.iloc[:, 0].astype(int).tolist(), df2.iloc[:, 1].tolist()))
 
         # Lista para almacenar los IDs que difieren
         dif_list = set()
