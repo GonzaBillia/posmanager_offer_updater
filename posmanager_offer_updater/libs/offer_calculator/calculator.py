@@ -122,7 +122,7 @@ def calcular_ofertas(output_file, archivo_propuesta):
         actualizar_log(f"Error {e}")
         return False
 
-def optimizar_lectoras(output_file):
+def optimizar_lectoras(output_file, first_filter):
     try:
         # Leer archivo
         df = pd.read_csv(output_file, sep='\t', encoding='utf-16', header=None)
@@ -155,7 +155,11 @@ def optimizar_lectoras(output_file):
 
         # Crear el nombre de archivo de salida
         fecha_hoy = datetime.today().strftime('%Y-%m-%d')
-        output_path = os.path.join(output_dir, f"calc-items-opt-{fecha_hoy}.txt")
+        
+        if first_filter:
+            output_path = os.path.join(output_dir, f"calc-items-{fecha_hoy}.txt")
+        else:
+            output_path = os.path.join(output_dir, f"calc-items-opt-{fecha_hoy}.txt")
 
         # Guardar el resultado en el archivo
         df.to_csv(output_path, index=False, header=False, sep='\t', encoding='utf-16', float_format="%.2f")
@@ -167,5 +171,5 @@ def optimizar_lectoras(output_file):
         return True
 
     except Exception as e:
-        actualizar_log(f"Error inesperado: {str(e)}")
+        actualizar_log(f"Error inesperado al optimizar columnas: {str(e)}")
         return False

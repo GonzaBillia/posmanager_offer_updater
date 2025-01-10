@@ -152,7 +152,7 @@ class Ui_main(object):
         # Añadir las opciones al dropdown
         self.dropdown_option_propuesta.addItems([
             _translate("main", "NO"),
-            _translate("main", "Por Oferta"),
-            _translate("main", "Por Actualización"),
+            _translate("main", "Con Oferta"),
+            _translate("main", "Con Actualización"),
         ])
 

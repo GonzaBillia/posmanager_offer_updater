@@ -85,7 +85,7 @@ Q_PRODUCTS = """
         ON productos.IDSubRubro = subrubros.IDSubRubro
 
     WHERE 
-        productos.Activo = 's'
+        productos.visible = True
         AND productos.idTipoIVA != 1
     GROUP BY 
         codigoInterno;
@@ -175,7 +175,7 @@ Q_SELECTED_PRODUCTS = """
         ON productos.IDSubRubro = subrubros.IDSubRubro
 
     WHERE
-        productos.Activo = 's'
+        productos.visible = True
         AND productos.idTipoIVA != 1
         AND productos.IDProducto IN %(list)s
     GROUP BY 
@@ -266,7 +266,7 @@ Q_UPDATED_PRODUCTS = """
         ON productos.IDSubRubro = subrubros.IDSubRubro
 
     WHERE 
-        productos.Activo = 's'
+        productos.visible = True
         AND productos.idTipoIVA != 1
         AND (
             (%(optimize_labels)s = 1 

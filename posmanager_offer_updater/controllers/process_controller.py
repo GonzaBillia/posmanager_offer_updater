@@ -48,7 +48,7 @@ def process(file_path2, file_propuesta, option, hilo_progreso):
         hilo_progreso.progreso_actualizado.emit(100 // 16 * 2)
 
         if option != 0:
-            price_changes = process_items(config['dias'], timestamp_actual, config['usar_timestamp'], True, connection)
+            price_changes = process_items(config['dias'], timestamp_actual, config['usar_timestamp'], False, connection)
             query_file_items = process_proposal(file_propuesta, option, price_changes, connection)
         else:
             query_file_items = process_items(config['dias'], timestamp_actual, config['usar_timestamp'], False, connection)
@@ -62,14 +62,16 @@ def process(file_path2, file_propuesta, option, hilo_progreso):
 
         output_file = procesar_archivos(query_file_items, file_path2)
         hilo_progreso.progreso_actualizado.emit(100 // 16 * 4)
-        items_file = calcular_ofertas(output_file, file_propuesta)
+        is_items, items_file = calcular_ofertas(output_file, file_propuesta)
         hilo_progreso.progreso_actualizado.emit(100 // 16 * 5)
         query_file_barcodes = process_barcodes(connection)
         hilo_progreso.progreso_actualizado.emit(100 // 16 * 6)
         codebars_file = seleccionar_barcodes(output_file, query_file_barcodes)
         hilo_progreso.progreso_actualizado.emit(100 // 16 * 7)
 
-        if items_file and codebars_file:
+        is_opt = optimizar_lectoras(items_file, True)
+
+        if is_opt and codebars_file:
             res = save_processed_files(False)
             hilo_progreso.progreso_actualizado.emit(100 // 16 * 8)
             actualizar_log("Proceso completado")
@@ -77,7 +79,8 @@ def process(file_path2, file_propuesta, option, hilo_progreso):
 
         # Optimizacion de Etiquetas
         if option != 0:
-            query_file_items_opt = query_file_items
+            price_changes = process_items(config['dias'], timestamp_actual, config['usar_timestamp'], True, connection)
+            query_file_items = process_proposal(file_propuesta, option, price_changes, connection)
         else:    
             query_file_items_opt = process_items(config['dias'], timestamp_actual, config['usar_timestamp'], True, connection)
         
@@ -88,7 +91,7 @@ def process(file_path2, file_propuesta, option, hilo_progreso):
         hilo_progreso.progreso_actualizado.emit(100 // 16 * 11)
 
         # Cambio de precios para lectoras:
-        is_opt = optimizar_lectoras(items_file_opt)
+        is_opt = optimizar_lectoras(items_file_opt, False)
         hilo_progreso.progreso_actualizado.emit(100 // 16 * 12)
 
 

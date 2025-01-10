@@ -48,39 +48,13 @@ def filter_by_proposal(proposal):
         actualizar_log(f"Error al leer los archivos para calcular: {e}")
         return
 
-def filter_fixed_price(proposal):
-    try:
-        df1 = pd.read_excel(proposal)
-
-        list1 = df1.iloc[:, 0].tolist()
-
-        fixed_list = [item for item in list1 if item > 1]
-
-        return fixed_list
-        
-    except Exception as e:
-        actualizar_log("Error al leer los archivos para calcular")
-        return
-
-def filter_discount_price(proposal):
-    try:
-        df1 = pd.read_excel(proposal)
-
-        list1 = df1.iloc[:, 0].tolist()
-
-        fixed_list = [item for item in list1 if item < 1]
-
-        return fixed_list
-        
-    except Exception as e:
-        actualizar_log("Error al leer los archivos para calcular")
-        return
     
 def filter_by_offer(proposal):
     try:
         df1 = pd.read_excel(proposal)
-
-        list1 = df1.iloc[:, 0].tolist()
+        df1 = df1.dropna(subset=[df1.columns[0], df1.columns[1]])
+        
+        list1 = df1.iloc[:, 0].astype(int).tolist()
 
         return list1
         

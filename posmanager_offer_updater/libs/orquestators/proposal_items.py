@@ -1,4 +1,4 @@
-from libs.proposal_filterer.filterer import filter_by_proposal, filter_discount_price, filter_fixed_price, filter_by_offer
+from libs.proposal_filterer.filterer import filter_by_proposal, filter_by_offer
 from controllers.query_controller import quantio_selected_products
 from controllers.file_controller import guardar_resultados_como_csv
 from ui.components.logs import get_logger
@@ -15,8 +15,6 @@ def process_proposal(proposal, option, price_changes, connection):
         filtered_list = filter_by_offer(proposal)
     elif option == 2:
         filtered_list = filter_by_proposal(proposal)
-        print("filtered list: ")
-        print(filtered_list)
     else:
         pass
 
@@ -30,12 +28,8 @@ def process_proposal(proposal, option, price_changes, connection):
 
         # Extiende la lista filtrada con los valores de price_list
         filtered_list.extend(price_list)
-        print("filtered list extendida:")
-        print(filtered_list)
         # Elimina duplicados
         final_list = list(dict.fromkeys(filtered_list))
-        print("final list: ")
-        print(final_list)
 
         data = quantio_selected_products(final_list, connection)
         output_file = guardar_resultados_como_csv(data, file_path, name)
