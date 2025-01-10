@@ -80,7 +80,7 @@ def process(file_path2, file_propuesta, option, hilo_progreso):
         # Optimizacion de Etiquetas
         if option != 0:
             price_changes = process_items(config['dias'], timestamp_actual, config['usar_timestamp'], True, connection)
-            query_file_items = process_proposal(file_propuesta, option, price_changes, connection)
+            query_file_items_opt = process_proposal(file_propuesta, option, price_changes, connection)
         else:    
             query_file_items_opt = process_items(config['dias'], timestamp_actual, config['usar_timestamp'], True, connection)
         
