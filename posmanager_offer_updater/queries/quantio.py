@@ -285,13 +285,13 @@ Q_BARCODES = """
     FROM productoscodebars 
     LEFT JOIN productos
     ON productos.IDProducto = productoscodebars.IDProducto
-    WHERE productos.Activo = 's' 
+    WHERE productos.visible = True 
     UNION ALL
 
     SELECT productos.IDProducto AS IDProducto, 
            IFNULL(productos.Codebar, '0') AS Codebar
     FROM productos
-    WHERE productos.Activo = 's' 
+    WHERE productos.visible = True 
 """
 
 Q_DEPARTMENTS = """
