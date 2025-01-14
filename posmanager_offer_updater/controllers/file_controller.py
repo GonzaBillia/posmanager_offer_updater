@@ -286,3 +286,26 @@ def get_resource_path(relative_path):
         # En desarrollo, usa el directorio del script.
         base_path = os.path.abspath(".")
     return os.path.join(base_path, relative_path)
+
+def save_file_as_csv(df, path, name):
+    # Crear la ruta de salida
+    path = os.path.expanduser(f'~\\Documents\\PM-offer-updater\\{path}')
+    
+    # Verificar si la carpeta existe, si no, crearla
+    if not os.path.exists(path):
+        os.makedirs(path)
+
+    # Crear el nombre de archivo con la fecha de hoy
+    fecha_hoy = datetime.today().strftime('%Y-%m-%d')
+    output_file = os.path.join(path, f"{name}-{fecha_hoy}.csv")
+
+    try:
+        # Guardar los resultados en el archivo CSV
+        df.to_csv(output_file, sep=';', index=False, encoding='utf-8')
+        
+        actualizar_log(f"Resultados guardados exitosamente en {output_file}.")
+        return output_file
+
+    except Exception as e:
+        actualizar_log(f"Error al guardar el archivo: {e}")
+        return None

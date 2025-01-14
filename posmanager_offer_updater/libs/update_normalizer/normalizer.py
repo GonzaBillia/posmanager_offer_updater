@@ -42,8 +42,8 @@ def procesar_archivos(file_path1, file_path2):
     df2.columns = df2.columns.str.strip()
 
     # Verificar que las columnas necesarias existen en ambos DataFrames
-    required_columns_df1 = [ 'IDProducto' ]
-    required_columns_df2 = ['CodigoERP' ]
+    required_columns_df1 = ['IDProducto']
+    required_columns_df2 = ['CodigoERP']
 
     missing_columns_df1 = [col for col in required_columns_df1 if col not in df1.columns]
     missing_columns_df2 = [col for col in required_columns_df2 if col not in df2.columns]

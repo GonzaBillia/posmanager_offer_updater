@@ -1,7 +1,8 @@
 import pymysql
 import os
 from ui.components.logs import get_logger
-from queries.quantio import cod1, cod2, Q_BARCODES, Q_UPDATED_PRODUCTS, Q_DEPARTMENTS, Q_FAMILIES, Q_PROVIDERS, Q_PRODUCTS, Q_SELECTED_PRODUCTS
+from queries.quantio import cod1, cod2, Q_BARCODES, Q_UPDATED_PRODUCTS, Q_DEPARTMENTS, Q_FAMILIES, Q_PROVIDERS, Q_SELECTED_PRODUCTS
+from queries.plex import P_STOCK
 
 actualizar_log = get_logger()
 
@@ -194,6 +195,38 @@ def quantio_updated_providers(connection):
             
             # Ejecutar la consulta SELECT
             cursor.execute(Q_PROVIDERS)
+
+            # Verificar si la consulta principal devuelve resultados
+            resultados = cursor.fetchall()
+            if resultados:  # Si hay resultados
+                actualizar_log("Consulta realizada correctamente")
+                return resultados
+            else:
+                actualizar_log("No hay resultados para la consulta.")
+                return []
+        else:
+            actualizar_log("No se pudo establecer la conexión a la base de datos.")
+            return []
+        
+    except pymysql.MySQLError as e:
+        actualizar_log(f"Error ejecutando la consulta: {e}")
+        return []
+    
+    finally:
+        # Asegurarse de que el cursor y la conexión se cierren después de la consulta
+        if cursor:
+            cursor.close()
+
+def plex_suc_stock(connection):
+    cursor = None
+    try:
+
+        if connection:
+            cursor = connection.cursor()
+            actualizar_log("Realizando consulta de Items de sucursal a la base de datos")
+            
+            # Ejecutar la consulta SELECT
+            cursor.execute(P_STOCK)
 
             # Verificar si la consulta principal devuelve resultados
             resultados = cursor.fetchall()

@@ -8,6 +8,7 @@ from libs.orquestators.quantio_items import process_file as process_items
 from libs.orquestators.quantio_barcodes import process_file as process_barcodes
 from libs.orquestators.quantio_categories import process_categories_files as process_categories
 from libs.orquestators.proposal_items import process_proposal
+from libs.orquestators.suc_items import filter_by_suc
 from libs.update_normalizer import procesar_archivos
 from libs.offer_calculator import calcular_ofertas, optimizar_lectoras
 from libs.barcode_selector import seleccionar_barcodes
@@ -80,9 +81,12 @@ def process(file_path2, file_propuesta, option, hilo_progreso):
         # Optimizacion de Etiquetas
         if option != 0:
             price_changes = process_items(config['dias'], timestamp_actual, config['usar_timestamp'], True, connection)
-            query_file_items_opt = process_proposal(file_propuesta, option, price_changes, connection)
+            query_file_items_all = process_proposal(file_propuesta, option, price_changes, connection)
+            query_file_items_opt = filter_by_suc(query_file_items_all)
+
         else:    
-            query_file_items_opt = process_items(config['dias'], timestamp_actual, config['usar_timestamp'], True, connection)
+            query_file_items_all = process_items(config['dias'], timestamp_actual, config['usar_timestamp'], True, connection)
+            query_file_items_opt = filter_by_suc(query_file_items_all)
         
         hilo_progreso.progreso_actualizado.emit(100 // 16 * 9)
         output_file_opt = procesar_archivos(query_file_items_opt, file_path2)
