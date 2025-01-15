@@ -1,7 +1,6 @@
 from ui.components.logs import get_logger
 from ui.components.filters import actualizar_ui_con_configuracion
 from ui.components.inputs import get_option
-from controllers.process_controller import process  # Importa la función desde el orquestador
 from ui.threads.progress_thread import ThreadProgress
 from ui.threads.worker_thread import WorkerThread
 

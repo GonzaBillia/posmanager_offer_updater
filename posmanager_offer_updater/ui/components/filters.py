@@ -19,6 +19,8 @@ def actualizar_ui_con_configuracion(ui):
     if config:
         ui.progressBar.setValue(0)
         ui.progressBar.setDisabled(True)
+        ui.button_option_propuesta.setEnabled(False)
+        ui.label_seleccion_propuesta.setVisible(False)
         ultima_fecha = config.get("timestamp", "No disponible")
         fecha = config.get('dias')
         ui.label_ult_fecha.setText(f"{ultima_fecha}")
@@ -31,6 +33,20 @@ def actualizar_ui_con_configuracion(ui):
 
         if ui.check_ultima_fecha.isChecked():
             ui.date_fecha.setDisabled(True)
+        
+        # Función para habilitar o deshabilitar el botón según el índice seleccionado
+        def toggle_button_option_propuesta():
+            if ui.dropdown_option_propuesta.currentIndex() == 2:  # Índice 2
+                ui.button_option_propuesta.setEnabled(True)
+                ui.label_seleccion_propuesta.setVisible(True)
+                ui.label_seleccion_propuesta.setText("preview.xlsx")
+            else:
+                ui.button_option_propuesta.setEnabled(False)
+                ui.label_seleccion_propuesta.setVisible(False)
+
+        # Conectar la señal del dropdown a la función de control
+        ui.dropdown_option_propuesta.currentIndexChanged.connect(toggle_button_option_propuesta)
+
 
 
 def ventana_query_quantio(ui):

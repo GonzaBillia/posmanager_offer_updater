@@ -58,7 +58,7 @@ class Ui_main(object):
         self.check_ultima_fecha.setText("")
         self.check_ultima_fecha.setObjectName("check_ultima_fecha")
         self.date_fecha = QtWidgets.QDateTimeEdit(self.options_frame)
-        self.date_fecha.setGeometry(QtCore.QRect(130, 50, 110, 22))
+        self.date_fecha.setGeometry(QtCore.QRect(110, 50, 120, 22))
         self.date_fecha.setObjectName("date_fecha")
         self.label_categorias = QtWidgets.QLabel(self.options_frame)
         self.label_categorias.setGeometry(QtCore.QRect(10, 130, 181, 21))
@@ -99,15 +99,24 @@ class Ui_main(object):
         self.label_propuesta.setGeometry(QtCore.QRect(0, 120, 161, 20))
         self.label_propuesta.setObjectName("label_propuesta")
 
-        self.label_option_propuesta = QtWidgets.QLabel(self.file_frame)
-        self.label_option_propuesta.setGeometry(QtCore.QRect(0, 180, 120, 20))
+        self.label_option_propuesta = QtWidgets.QLabel(self.options_frame)
+        self.label_option_propuesta.setGeometry(QtCore.QRect(10, 160, 100, 20))
         self.label_option_propuesta.setObjectName("label_option_propuesta")
 
-         # Crear el QComboBox (Dropdown)
-        self.dropdown_option_propuesta = QtWidgets.QComboBox(self.file_frame)
-        self.dropdown_option_propuesta.setGeometry(QtCore.QRect(130, 180, 100, 20))
+        # Crear el QComboBox (Dropdown)
+        self.dropdown_option_propuesta = QtWidgets.QComboBox(self.options_frame)
+        self.dropdown_option_propuesta.setGeometry(QtCore.QRect(110, 160, 80, 20))
         self.dropdown_option_propuesta.setObjectName("dropdown_option_propuesta")
 
+        # Crear Boton para seleccionar Propuesta historica
+        self.button_option_propuesta = QtWidgets.QPushButton(self.options_frame)
+        self.button_option_propuesta.setGeometry(QtCore.QRect(200, 160, 30, 21))
+        self.button_option_propuesta.setObjectName("button_option_propuesta")
+        self.button_option_propuesta.setIcon(QtWidgets.QApplication.style().standardIcon(QtWidgets.QStyle.SP_DirIcon))
+
+        self.label_seleccion_propuesta = QtWidgets.QLabel(self.options_frame)
+        self.label_seleccion_propuesta.setGeometry(QtCore.QRect(20, 180, 200, 20))
+        self.label_seleccion_propuesta.setDisabled(True)
 
         self.divider = QtWidgets.QFrame(self.file_frame)
         self.divider.setGeometry(QtCore.QRect(0, 30, 241, 16))
@@ -140,19 +149,19 @@ class Ui_main(object):
         main.setWindowTitle(_translate("main", "Actualizador POSManager"))
         self.title_2.setText(_translate("main", "Filtros y Opciones:"))
         self.label_fecha.setText(_translate("main", "Utilizar Fecha Fija"))
-        self.label_ultima_fecha.setText(_translate("main", "Última Fecha de Actualización"))
+        self.label_ultima_fecha.setText(_translate("main", "Usar Ult. Fecha de Actualización"))
         self.label_categorias.setText(_translate("main", "Actualizar Provs, Dptos y Fams"))
         self.title.setText(_translate("main", "Selecciona los archivos necesarios:"))
         self.label_items.setText(_translate("main", "Lista completa de productos de POSManager"))
         self.button_items.setText(_translate("main", "Buscar"))
         self.button_propuesta.setText(_translate("main", "Buscar"))
         self.label_propuesta.setText(_translate("main", "Archivo de Propuesta comercial"))
-        self.label_option_propuesta.setText(_translate("main", "Procesar por Propuesta"))
+        self.label_option_propuesta.setText(_translate("main", "Revisar Propuesta"))
         self.button_procesar.setText(_translate("main", "Procesar Archivos"))
         # Añadir las opciones al dropdown
         self.dropdown_option_propuesta.addItems([
             _translate("main", "NO"),
-            _translate("main", "Con Oferta"),
-            _translate("main", "Con Actualización"),
+            _translate("main", "Solo Oferta"),
+            _translate("main", "Actualización"),
         ])
 

@@ -84,10 +84,6 @@ def save_direct_file(data, name):
 
     return output_file
 
-import os
-import shutil
-from datetime import datetime
-
 def save_proposal_backup(input_file):
     # Crear la ruta de salida
     output_dir = os.path.expanduser(f'~\\Documents\\PM-offer-updater\\processed-files\\History\\Propuesta')
@@ -97,8 +93,8 @@ def save_proposal_backup(input_file):
         os.makedirs(output_dir)
 
     # Crear el nombre del archivo de salida
-    fecha_hoy = datetime.today().strftime('%Y-%m-%d')
-    output_file = os.path.join(output_dir, f"Propuesta.xlsx")
+    fecha_hoy = datetime.today().strftime('%Y-%m-%d %H-%m-%s')
+    output_file = os.path.join(output_dir, f"Propuesta-{fecha_hoy}.xlsx")
 
     # Copiar el archivo de entrada a la ruta de salida
     try:
