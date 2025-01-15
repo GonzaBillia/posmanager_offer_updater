@@ -58,7 +58,6 @@ def process(file_path2, file_propuesta, option, hilo_progreso):
 
         query_file_items_opt = None
 
-        save_proposal_backup(file_propuesta)
         update_config_query('timestamp', fecha_actual)
 
         output_file = procesar_archivos(query_file_items, file_path2)
@@ -111,6 +110,8 @@ def process(file_path2, file_propuesta, option, hilo_progreso):
 
         open_file(res)
         hilo_progreso.progreso_actualizado.emit(100 // 16 * 15)
+        
+        save_proposal_backup(file_propuesta)
 
     except ValueError as e:
         messagebox.showerror("Error", str(e))
