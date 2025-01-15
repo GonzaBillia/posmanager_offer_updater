@@ -1,5 +1,5 @@
 from PyQt5.QtWidgets import QFileDialog, QCheckBox, QMessageBox
-from PyQt5.QtCore import QDate
+from PyQt5.QtCore import QDateTime
 from ui.components.logs import get_logger
 from controllers.file_controller import read_query_config, save_query_config
 import os
@@ -22,7 +22,7 @@ def actualizar_ui_con_configuracion(ui):
         ultima_fecha = config.get("timestamp", "No disponible")
         fecha = config.get('dias')
         ui.label_ult_fecha.setText(f"{ultima_fecha}")
-        ui.date_fecha.setDate(QDate.fromString(fecha, "yyyy-MM-dd"))
+        ui.date_fecha.setDateTime(QDateTime.fromString(fecha, "yyyy-MM-dd HH:mm"))
         ui.check_ultima_fecha.setChecked(config.get('usar_timestamp', False))
         ui.check_categories.setChecked(config.get('dpts_fams', False))
         
@@ -41,7 +41,7 @@ def ventana_query_quantio(ui):
     def save_config():
 
         # Obtener los valores de la UI
-        fecha_seleccionada = ui.date_fecha.date().toString("yyyy-MM-dd")
+        fecha_seleccionada = ui.date_fecha.dateTime().toString("yyyy-MM-dd HH:mm")
         usar_ultima_fecha = ui.check_ultima_fecha.isChecked()
         usar_categorias = ui.check_categories.isChecked()
 
