@@ -121,6 +121,14 @@ def procesar_archivos(file_path1, file_path2):
     # Renombrar 'IdItem' como 'codigoInterno'
     result.rename(columns={'IdItem': 'codigoInterno'}, inplace=True)
 
+    # Aplicar la transformación de descripcion según las condiciones
+    result['Nom Reducido'] = result.apply(
+        lambda row: row['Nom Reducido'].replace(" X G", " X KG") 
+        if row['Nom Reducido'].endswith(" X G") and row['codigoInterno'] < 8000 
+        else row['Nom Reducido'], 
+        axis=1
+    )
+
     # OUTPUT
 
      # Carpeta de salida
