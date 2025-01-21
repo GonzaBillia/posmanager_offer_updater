@@ -2,7 +2,7 @@ import pymysql
 import os
 from ui.components.logs import get_logger
 from queries.quantio import cod1, cod2, Q_BARCODES, Q_UPDATED_PRODUCTS, Q_DEPARTMENTS, Q_FAMILIES, Q_PROVIDERS, Q_SELECTED_PRODUCTS
-from queries.plex import P_STOCK
+from queries.plex import P_STOCK, P_PRODUCTS
 
 actualizar_log = get_logger()
 
@@ -248,3 +248,50 @@ def plex_suc_stock(connection):
         # Asegurarse de que el cursor y la conexión se cierren después de la consulta
         if cursor:
             cursor.close()
+
+def plex_updated_products(day_filter, timestamp, is_timestamp, optimize_labels, connection):
+    cursor = None
+    try:        
+        if connection:
+            cursor = connection.cursor()
+            actualizar_log("Cursor abierto para realizar consulta")
+
+            # Determinar el filtro a utilizar
+            day_filter_value = timestamp if is_timestamp and timestamp is not None else day_filter
+
+            optimize_labels_value = int(optimize_labels)  # True -> 1, False -> 0
+            # Ejecutar la consulta con los parámetros adecuados
+            cursor.execute(
+                P_PRODUCTS,
+                # {"day_filter": day_filter_value, "optimize_labels": optimize_labels_value}
+            )
+            
+            # Verificar si la consulta principal devuelve resultados
+            resultados = cursor.fetchall()
+            if resultados:  # Si hay resultados
+                actualizar_log("Consulta realizada correctamente")
+                for row in resultados:
+                    # row es un diccionario
+                    if 'm.FechaUltimoPrecio' in row:
+                        row['FechaUltimoPrecio'] = row.pop('m.FechaUltimoPrecio')
+                    if '.FechaUltimoPrecio' in row:
+                        row['FechaUltimoPrecio'] = row.pop('.FechaUltimoPrecio')
+                    if 'm.idTipoIVA' in row:
+                        row['idTipoIVA'] = row.pop('m.idTipoIVA')
+                return resultados
+            else:
+                actualizar_log("No hay resultados para la consulta.")
+                return []
+        else:
+            actualizar_log("No se pudo establecer la conexión a la base de datos.")
+            return []
+        
+    except pymysql.MySQLError as e:
+        actualizar_log(f"Error ejecutando la consulta: {e}")
+        return []
+    
+    finally:
+        # Asegurarse de que el cursor y la conexión se cierren después de la consulta
+        if cursor:
+            cursor.close()
+            actualizar_log("Cursor cerrado después de la consulta.")
