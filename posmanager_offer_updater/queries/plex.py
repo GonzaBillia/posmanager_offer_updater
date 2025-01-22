@@ -112,7 +112,7 @@ P_PRODUCTS = """
         IFNULL(m.CodRubro, 0) AS IDRubro,
 
         -- (33) idMarca
-        IFNULL(m.CodLab, 0) AS idMarca,
+        '0' AS idMarca,
 
         -- (34) Fecha Inicio
         '01/12/2024' AS 'Fecha Inicio',
@@ -131,16 +131,27 @@ P_PRODUCTS = """
     AND s.Sucursal = '33'
     AND s.Cantidad != 0
     AND m.CodPlex LIKE '999%'
-    AND m.FechaModificacion >= %(day_filter)s);
+    -- AND m.FechaModificacion >= %(day_filter)s);
 """
 
 P_BARCODES = """
     SELECT 
-        CodPlex AS IDProducto,
-        IFNULL(Codebar, 0) AS Codebar
+        m.CodPlex AS IDProducto,
+        IFNULL(m.Codebar, '0') AS Codebar
     FROM onze_center.medicamentos AS m
-    INNER JOIN onze_center.stock AS s
-        ON m.CodPlex = s.IDProducto
+    INNER JOIN onze_center.stock AS s ON m.CodPlex = s.IDProducto
+    WHERE m.IdProductoPadre != ''
+    AND m.visible = True
+    AND s.Sucursal = '33'
+    AND s.Cantidad != 0
+    AND m.CodPlex LIKE '999%'
+    UNION ALL
+    SELECT 
+        pc.IDProducto,
+        IFNULL(pc.Codebar, '0') AS Codebar
+    FROM onze_center.productoscodebars AS pc
+    INNER JOIN onze_center.medicamentos AS m ON pc.IDProducto = m.CodPlex
+    INNER JOIN onze_center.stock AS s ON pc.IDProducto = s.IDProducto
     WHERE m.IdProductoPadre != ''
     AND m.visible = True
     AND s.Sucursal = '33'
