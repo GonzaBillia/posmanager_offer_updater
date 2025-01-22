@@ -2,7 +2,7 @@ import pymysql
 import os
 from ui.components.logs import get_logger
 from queries.quantio import cod1, cod2, Q_BARCODES, Q_UPDATED_PRODUCTS, Q_DEPARTMENTS, Q_FAMILIES, Q_PROVIDERS, Q_SELECTED_PRODUCTS
-from queries.plex import P_STOCK, P_PRODUCTS
+from queries.plex import P_STOCK, P_PRODUCTS, P_BARCODES
 
 actualizar_log = get_logger()
 
@@ -99,6 +99,38 @@ def quantio_updated_barcodes(connection):
             
             # Ejecutar la consulta SELECT
             cursor.execute(Q_BARCODES)
+
+            # Verificar si la consulta principal devuelve resultados
+            resultados = cursor.fetchall()
+            if resultados:  # Si hay resultados
+                actualizar_log("Consulta realizada correctamente")
+                return resultados
+            else:
+                actualizar_log("No hay resultados para la consulta.")
+                return []
+        else:
+            actualizar_log("No se pudo establecer la conexión a la base de datos.")
+            return []
+        
+    except pymysql.MySQLError as e:
+        actualizar_log(f"Error ejecutando la consulta: {e}")
+        return []
+    
+    finally:
+        # Asegurarse de que el cursor y la conexión se cierren después de la consulta
+        if cursor:
+            cursor.close()
+
+def plex_updated_barcodes(connection):
+    cursor = None
+    try:
+
+        if connection:
+            cursor = connection.cursor()
+            actualizar_log("Realizando consulta de códigos de barra a la base de datos")
+            
+            # Ejecutar la consulta SELECT
+            cursor.execute(P_BARCODES)
 
             # Verificar si la consulta principal devuelve resultados
             resultados = cursor.fetchall()
