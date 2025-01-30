@@ -131,7 +131,7 @@ P_PRODUCTS = """
     AND s.Sucursal = '33'
     AND s.Cantidad != 0
     AND m.CodPlex LIKE '999%'
-    -- AND m.FechaModificacion >= %(day_filter)s);
+    AND m.FechaModificacion >= %(day_filter)s);
 """
 
 P_BARCODES = """

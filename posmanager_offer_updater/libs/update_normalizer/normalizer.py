@@ -1,11 +1,22 @@
 import pandas as pd
-import os
+import os, csv
 from datetime import datetime
 from ui.components.logs import get_logger
 
 # Obtener la función para actualizar logs
 actualizar_log = get_logger()
 
+def detectar_delimitador(file_path):
+    """Detecta el delimitador del archivo usando csv.Sniffer"""
+    try:
+        with open(file_path, 'r', encoding='latin1') as f:
+            sample = f.read(2048)  # Leer una muestra del archivo
+            f.seek(0)
+            dialect = csv.Sniffer().sniff(sample)
+            return dialect.delimiter
+    except Exception as e:
+        actualizar_log(f"No se pudo detectar el delimitador automáticamente: {e}")
+        return None  # Devolver None si hay un error
 
 def procesar_archivos(file_path1, file_path2):
     # Intentar leer los archivos
@@ -22,9 +33,38 @@ def procesar_archivos(file_path1, file_path2):
         actualizar_log(f"Hubo un error al leer el archivo {file_path1}: {e}")
         return
 
+
     try:
-        # Leer el archivo df2 (TXT delimitado por tabulaciones)
-        df2 = pd.read_csv(file_path2, sep='\t', encoding='latin1', on_bad_lines='skip')
+        # Intentar detectar el delimitador
+        delim = detectar_delimitador(file_path2)
+
+        if delim is None:
+            actualizar_log(f"No se detectó delimitador válido para el archivo {file_path2}, intentando con tabulación por defecto.")
+            delim = '\t'  # Asignar tabulación como opción de respaldo
+
+        # Leer el archivo con el delimitador detectado
+        df2 = pd.read_csv(file_path2, 
+                        sep=delim, 
+                        encoding='latin1',
+                        on_bad_lines='skip')
+
+        # Verificar si la detección del delimitador es correcta
+        if df2.shape[1] == 1:  # Si solo hay una columna, el delimitador puede ser incorrecto
+            actualizar_log(f"Posible error al detectar el delimitador en {file_path2}. "
+                        f"Se leyó como una sola columna con '{delim}', intentando con otro delimitador.")
+
+            # Intentar con la tabulación si el delimitador inicial fue una coma
+            nuevo_delim = ',' if delim == '\t' else '\t'
+            df2 = pd.read_csv(file_path2, 
+                            sep=nuevo_delim, 
+                            encoding='latin1',
+                            on_bad_lines='skip')
+
+            # Verificar nuevamente si sigue fallando
+            if df2.shape[1] == 1:
+                actualizar_log(f"Error: No se pudo determinar correctamente el delimitador en {file_path2}.")
+                return
+
     except pd.errors.ParserError as e:
         actualizar_log(f"Error de análisis al leer el archivo {file_path2}: {e}")
         return
