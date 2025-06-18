@@ -5,8 +5,10 @@ import datetime
 import shutil
 import json
 import csv
+import glob
 import pandas as pd
 from datetime import datetime
+from typing import List
 from ui.components.logs import get_logger
 
 actualizar_log = get_logger()
@@ -309,3 +311,54 @@ def save_file_as_csv(df, path, name):
     except Exception as e:
         actualizar_log(f"Error al guardar el archivo: {e}")
         return None
+    
+def excel_first_col_to_int_list(
+) -> List[int]:
+    """
+    Lee un archivo Excel y extrae la primera columna como lista de enteros.
+
+    Parámetros:
+    -----------
+    file_path : str
+        Ruta al archivo .xlsx o .xls.
+    sheet_name : str | int, opcional
+        Nombre o índice de la hoja (por defecto, la primera hoja: 0).
+    header : int | None, opcional
+        Fila que se usa como cabecera (por defecto, fila 0). Si no hay cabecera, pasar None.
+
+    Retorna:
+    --------
+    List[int]
+        Valores de la primera columna convertidos a int.
+    """
+    
+    folder = os.path.expanduser(f'~\\Documents\\PM-offer-updater\\excluded')
+    os.makedirs(folder, exist_ok=True)
+    # Leer sólo la primera columna
+    pattern = os.path.join(folder, "*.xlsx")
+
+    # Listamos los archivos que casan con el patrón
+    files = glob.glob(pattern)
+    if not files:
+        actualizar_log("No se encontraron archivos Excel en la carpeta especificada. Se devuelve una lista vacía.")
+        return []
+
+    # Tomamos el primero
+    file_path = files[0]
+
+    # Leemos sólo la primera columna (índice 0)
+    df = pd.read_excel(
+        file_path,
+        sheet_name=0,
+        usecols=[0],
+        header=0
+    )
+
+    # Convertimos a int descartando nulos
+    try:
+        return df.iloc[:, 0] \
+                 .dropna() \
+                 .astype(int) \
+                 .tolist()
+    except ValueError as e:
+        raise ValueError(f"Error al convertir valores a enteros: {e}")

@@ -23,7 +23,7 @@ class DBConfig:
                 user=os.getenv("DB_ONZE_USER"),
                 password=os.getenv("DB_ONZE_PASSWORD"),
                 database=os.getenv("DB_ONZE_DATABASE"),
-                port=int(os.getenv("DB_ONZE_PORT")),
+                port=int(os.getenv("DB_ONZE_PORT", "3307")),
                 cursorclass=pymysql.cursors.DictCursor,
                 charset='utf8'
             )

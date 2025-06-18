@@ -1,7 +1,8 @@
 import pymysql
 import os
+from typing import List, Tuple
 from ui.components.logs import get_logger
-from queries.quantio import cod1, cod2, Q_BARCODES, Q_UPDATED_PRODUCTS, Q_DEPARTMENTS, Q_FAMILIES, Q_PROVIDERS, Q_SELECTED_PRODUCTS
+from queries.quantio import cod1, cod2, Q_BARCODES, Q_UPDATED_PRODUCTS, Q_DEPARTMENTS, Q_FAMILIES, Q_PROVIDERS, Q_SELECTED_PRODUCTS, Q_EXCLUDED_PRODUCTS
 from queries.plex import P_STOCK, P_PRODUCTS, P_BARCODES
 
 actualizar_log = get_logger()
@@ -45,6 +46,44 @@ def quantio_updated_products(day_filter, timestamp, is_timestamp, optimize_label
     
     finally:
         # Asegurarse de que el cursor y la conexión se cierren después de la consulta
+        if cursor:
+            cursor.close()
+            actualizar_log("Cursor cerrado después de la consulta.")
+            
+def quantio_uexcluded_products(id_list: List[int], connection):
+    cursor = None
+    try:
+        if not id_list:
+            actualizar_log("La lista de IDs está vacía.")
+            return []
+
+        cursor = connection.cursor()
+        actualizar_log("Cursor abierto para realizar consulta")
+
+        # Ejecutar las sentencias SET (cod1, cod2)
+        cursor.execute(cod1)
+        cursor.execute(cod2)
+
+        # Generamos un marcador %s por cada elemento en la lista
+        placeholders = ", ".join(["%s"] * len(id_list))
+        sql = Q_EXCLUDED_PRODUCTS.format(placeholders=placeholders)
+
+        # Ejecutamos pasando la lista como parámetros posicionales
+        cursor.execute(sql, tuple(id_list))
+
+        resultados = cursor.fetchall()
+        if resultados:
+            actualizar_log("Consulta realizada correctamente")
+            return resultados
+        else:
+            actualizar_log("No hay resultados para la consulta.")
+            return []
+
+    except pymysql.MySQLError as e:
+        actualizar_log(f"Error ejecutando la consulta: {e}")
+        return []
+
+    finally:
         if cursor:
             cursor.close()
             actualizar_log("Cursor cerrado después de la consulta.")
