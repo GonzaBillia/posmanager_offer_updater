@@ -43,7 +43,7 @@ P_PRODUCTS = """
         ROUND(COALESCE(mp.Precio, 0) / NULLIF(mp.Unidades, 0), 2) AS precio_final,
 
         -- (10) FechaUltimoPrecio
-        DATE_FORMAT(m.FechaModificacion, '%d/%m/%Y') AS FechaUltimoPrecio,
+        DATE_FORMAT(m.FechaModificacion, '%%d/%%m/%%Y') AS FechaUltimoPrecio,
 
         -- (11) descrip reducida
         m.Producto AS 'descrip reducida',
@@ -64,7 +64,7 @@ P_PRODUCTS = """
         '0' AS 'Tamanio de Letra',
 
         -- (17) FechaUltimoPrecio (segunda vez)
-        DATE_FORMAT(m.FechaModificacion, '%d/%m/%Y') AS FechaUltimoPrecio,
+        DATE_FORMAT(m.FechaModificacion, '%%d/%%m/%%Y') AS FechaUltimoPrecio,
 
         -- (18) Codigo_Adicional
         '*' AS 'Codigo_Adicional',
@@ -130,8 +130,7 @@ P_PRODUCTS = """
     AND m.visible = True
     AND s.Sucursal = '33'
     AND s.Cantidad != 0
-    AND m.CodPlex LIKE '999%'
-    AND m.FechaModificacion >= %(day_filter)s);
+    AND m.FechaModificacion >= %(day_filter)s;
 """
 
 P_BARCODES = """
@@ -144,7 +143,6 @@ P_BARCODES = """
     AND m.visible = True
     AND s.Sucursal = '33'
     AND s.Cantidad != 0
-    AND m.CodPlex LIKE '999%'
     UNION ALL
     SELECT 
         pc.IDProducto,
@@ -155,6 +153,5 @@ P_BARCODES = """
     WHERE m.IdProductoPadre != ''
     AND m.visible = True
     AND s.Sucursal = '33'
-    AND s.Cantidad != 0
-    AND m.CodPlex LIKE '999%';
+    AND s.Cantidad != 0;
 """

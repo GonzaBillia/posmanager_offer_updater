@@ -13,17 +13,22 @@ name = "Items"
 
 def process_file(day_filter, timestamp, is_timestamp, optimize_labels, connection):
     try:
-        data = quantio_updated_products(day_filter, timestamp, is_timestamp, optimize_labels, connection)
+        combined_data = quantio_updated_products(day_filter, timestamp, is_timestamp, optimize_labels, connection)
         plex_data = plex_updated_products(day_filter, timestamp, is_timestamp, optimize_labels, connection_pl)
-        list = excel_first_col_to_int_list()
-        q_excluded = quantio_uexcluded_products(list, connection)
-        data.extend(plex_data)
-        data.extend(q_excluded)
-        print(list)
-        output_file = guardar_resultados_como_csv(data, file_path, name)
-        actualizar_log("El archivo Items Quantio se proceso correctamente")
+        ean_list = excel_first_col_to_int_list()
+        q_excluded = quantio_uexcluded_products(ean_list, connection)
+        
+        combined_data.extend(plex_data)
+        combined_data.extend(q_excluded)
+        
+        # Eliminar duplicados usando IDProducto
+        unique_data = {item["IDProducto"]: item for item in combined_data}
+
+        output_file = guardar_resultados_como_csv(list(unique_data.values()), file_path, name)
+        actualizar_log("El archivo Items Quantio se procesó correctamente")
         return output_file
     except Exception as e:
-        actualizar_log(f"Ocurrio un Error en el proceso de la consulta: {e}")
+        actualizar_log(f"Ocurrió un Error en el proceso de la consulta: {e}")
         raise e
+
 

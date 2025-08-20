@@ -4,8 +4,34 @@ from typing import List, Tuple
 from ui.components.logs import get_logger
 from queries.quantio import cod1, cod2, Q_BARCODES, Q_UPDATED_PRODUCTS, Q_DEPARTMENTS, Q_FAMILIES, Q_PROVIDERS, Q_SELECTED_PRODUCTS, Q_EXCLUDED_PRODUCTS
 from queries.plex import P_STOCK, P_PRODUCTS, P_BARCODES
+from datetime import datetime, date
 
 actualizar_log = get_logger()
+
+
+def format_date_for_mysql(value):
+    if isinstance(value, str):
+        # Probar con varios formatos
+        for fmt in ('%Y-%m-%d', '%Y-%m-%d %H-%M-%S', '%Y-%m-%d %H:%M:%S', '%d/%m/%Y'):
+            try:
+                dt = datetime.strptime(value, fmt)
+                # Si tiene hora, devolvé el datetime completo. Si no, solo la fecha.
+                if 'H' in fmt:
+                    return dt.strftime('%Y-%m-%d %H:%M:%S')
+                else:
+                    return dt.strftime('%Y-%m-%d')
+            except ValueError:
+                continue
+        raise ValueError(f"El valor '{value}' no es un formato de fecha soportado (debe ser YYYY-MM-DD, YYYY-MM-DD HH:MM:SS, DD/MM/YYYY).")
+    elif isinstance(value, (datetime, date)):
+        # Si el objeto tiene hora distinta de 00:00:00, incluí la hora
+        if isinstance(value, datetime) and (value.hour != 0 or value.minute != 0 or value.second != 0):
+            return value.strftime('%Y-%m-%d %H:%M:%S')
+        else:
+            return value.strftime('%Y-%m-%d')
+    else:
+        raise ValueError(f"El valor '{value}' no es tipo fecha ni string válido.")
+
 
 def quantio_updated_products(day_filter, timestamp, is_timestamp, optimize_labels, connection):
     cursor = None
@@ -329,12 +355,12 @@ def plex_updated_products(day_filter, timestamp, is_timestamp, optimize_labels, 
 
             # Determinar el filtro a utilizar
             day_filter_value = timestamp if is_timestamp and timestamp is not None else day_filter
-
+            day_filter_value = format_date_for_mysql(day_filter_value)
             optimize_labels_value = int(optimize_labels)  # True -> 1, False -> 0
             # Ejecutar la consulta con los parámetros adecuados
             cursor.execute(
                 P_PRODUCTS,
-                # {"day_filter": day_filter_value, "optimize_labels": optimize_labels_value}
+                {"day_filter": day_filter_value}
             )
             
             # Verificar si la consulta principal devuelve resultados
@@ -349,6 +375,7 @@ def plex_updated_products(day_filter, timestamp, is_timestamp, optimize_labels, 
                         row['FechaUltimoPrecio'] = row.pop('.FechaUltimoPrecio')
                     if 'm.idTipoIVA' in row:
                         row['idTipoIVA'] = row.pop('m.idTipoIVA')
+                    
                 return resultados
             else:
                 actualizar_log("No hay resultados para la consulta.")

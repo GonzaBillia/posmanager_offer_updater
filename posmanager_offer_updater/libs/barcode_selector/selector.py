@@ -40,11 +40,18 @@ def seleccionar_barcodes(output_file, barcode_query):
         # Realizar el "merge" entre las dos tablas usando 'CodigoERP', con un 'left join' para incluir filas de df1 que no están en df2
         merged_df = pd.merge(df1[['IDProducto', 'codigoInterno']], df2[['IDProducto', 'Codebar']], on='IDProducto', how='left')
 
-        # Reordenar las columnas según la solicitud (codigoInterno, Codebar)
-        result = merged_df[['codigoInterno', 'Codebar']]
+        # Reordenar las columnas según la solicitud (codigoInterno, Codebar, IDProducto para filtrar)
+        result = merged_df[['IDProducto', 'codigoInterno', 'Codebar']]
 
+        # Eliminar duplicados
         result = result.drop_duplicates()
 
+        # 🔥 Eliminar todas las filas donde IDProducto sea menor a 8000
+        result = result[result['IDProducto'] >= 8000]
+
+        # Quitar IDProducto si no quieres que aparezca en el output final
+        result = result[['codigoInterno', 'Codebar']]
+        
         actualizar_log("Cruce de archivo de codigo de barras realizado")
 
         # OUTPUT
